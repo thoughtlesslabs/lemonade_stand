@@ -5,12 +5,51 @@ __lua__
 -- a thoughtless labs experiment
 
 function _init()
+	cls()
+	mode="start"
 end
 
 function _update60()
+	if mode=="start" then
+		updatestart()
+	elseif mode=="game" then
+		updategame()
+	elseif mode=="gameover" then
+		updategameover()
+	end
 end
 
 function _draw()
+	if mode=="start" then
+		drawstart()	
+	elseif mode=="game" then
+		drawgame()
+	elseif mode=="gameover" then
+		drawgameover()
+	end
+end
+
+function updatestart()
+	if btnp(5) then
+		mode="game"
+	end
+end
+
+function drawstart()
+	cls(10)
+	fillp(0b1010010000000001.1)
+	rectfill(0,0,128,128,9)
+	print("lemonade stand",38,20,7)
+	print("press ❎ to start",35,88,7)
+end
+
+function updategame()
+	cls(10)
+	
+end
+
+function drawgame()
+
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
