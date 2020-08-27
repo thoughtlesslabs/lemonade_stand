@@ -7,12 +7,11 @@ __lua__
 function _init()
 	cls()
 	mode="start"
-	selector=0
+	selector=1
+	activemenu=1
 	money=1000
-	menu={1,2,3}
 	selx=65
 	sely=22
-	selchange=0
 	initinventory()
 end
 
@@ -51,20 +50,26 @@ function drawstart()
 end
 
 function updategame()
+	if activemenu==1 then
 	if btnp(2) then
-		if selector<#menu then
+		if selector>1 then
 			selector-=1
 			sely-=10
 		end
 	end
 	if btnp(3) then
-		if selector>1 then
+		if selector<#inventory then
 			selector+=1
 			sely+=10
 		end
 	end
-	if btnp(4) then
+elseif activemenu=2 then
+end
+	if btnp(5) then
 		purchase(selector)
+	end
+	if btnp(4) then
+		switchmenu()
 	end
 end
 
@@ -74,6 +79,8 @@ function drawgame()
 	print(_item,10,100,8)
 	print(_price,10,110,8)
 	print(selector,10,80,8)
+	
+	--
 	
 	-- player inventory
 	local ix,iy,funds
@@ -87,7 +94,7 @@ function drawgame()
 	print("cUPS: ",ix+5,iy+35,0)
 	print("$ ",ix+5,iy+50,0)
 	print(funds,(ix+5)-(#funds*4-40),iy+50,0)
-		-- print store prices
+		-- print current inventory
 	for i=1,#inventory do
 		current=" "..inventory[i].owned
 		print(current,(ix+5)-(#current*4-40),iy+5+10*i,0)
@@ -102,6 +109,7 @@ function drawgame()
 	print("lEMONS: ",sx+5,sy+15,0)
 	print("sUGAR: ",sx+5,sy+25,0)
 	print("cUPS: ",sx+5,sy+35,0)	
+	print("❎ to buy",sx+5,sy+50,9)	
 	
 	-- print store prices
 	for i=1,#inventory do
@@ -109,7 +117,8 @@ function drawgame()
 		print(price,(sx+5)-(#price*4-40),sy+5+10*i,0)
 	end
 	
-		rect(selx,sely,selx+50,sely+10,8)
+	-- store selector
+	rect(selx,sely,selx+50,sely+10,8)
 end
 
 function purchase(item)	
@@ -117,6 +126,14 @@ function purchase(item)
 	if money>=choice.cost then
 		money-=choice.cost
 		choice.owned+=1
+	end
+end
+
+function switchmenu(current)
+	if current==1 then
+		current=2
+	elseif current==2 then
+		current=1
 	end
 end
 
