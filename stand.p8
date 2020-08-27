@@ -9,12 +9,8 @@ function _init()
 	mode="start"
 	selector=0
 	money=1000
-	lemons=0
-	sugar=0
-	cups=0
-	prices={5,2,10}
 	menu={1,2,3}
-
+	initinventory()
 end
 
 function _update60()
@@ -87,21 +83,21 @@ function drawgame()
 	-- player inventory
 	local ix,iy,funds
 	funds=" "..money
-	lems=" "..lemons
-	sug=" "..sugar
-	cup=" "..cups
 	ix=10
 	iy=10
 	rectfill(ix,iy,ix+50,iy+60,7)
 	print("inventory",ix+5,iy+5,0)
 	print("lEMONS: ",ix+5,iy+15,0)
-	print(lems,(ix+5)-(#lems*4-40),iy+15,0)
 	print("sUGAR: ",ix+5,iy+25,0)
-	print(sug,(ix+5)-(#sug*4-40),iy+25,0)
 	print("cUPS: ",ix+5,iy+35,0)
-	print(cup,(ix+5)-(#cup*4-40),iy+35,0)
 	print("$ ",ix+5,iy+50,0)
 	print(funds,(ix+5)-(#funds*4-40),iy+50,0)
+		-- print store prices
+	for i=1,#inventory do
+		available=" "..inventory[i].avail
+		print(available,(ix+5)-(#available*4-40),iy+5+10*i,0)
+	end
+	
 	
 	-- store
 	local sx,sy
@@ -114,27 +110,36 @@ function drawgame()
 	print("cUPS: ",sx+5,sy+35,0)	
 	
 	-- print store prices
-	for i=1,#prices do
-		price=" "..prices[i]
+	for i=1,#inventory do
+		price=" "..inventory[i].cost
 		print(price,(sx+5)-(#price*4-40),sy+5+10*i,0)
 	end
 end
 
-function purchase(cost,item)	
-	_price=cost
- _item=item
-	if money>_price then
-		money=money-_price
-		if _item==lemons then
-			lemons+=1
-		elseif _item==sugar then
-			sugar+=1
-		elseif _item==cups then
-			cups+=1
-		end
-	end
+function purchase()	
+	
 end
 
+function initinventory()
+	inventory=
+	{
+		{name="lemons"
+		,avail=100
+		,owned=0
+		,cost=50
+		}
+		{name="sugar"
+		,avail=100
+		,owned=0
+		,cost=10
+		}
+		{name="cups"
+		,avail=100
+		,owned=0
+		,cost=20
+		}
+	}	
+end	
 		
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
