@@ -59,18 +59,7 @@ function updategame()
 		end
 	end
 	if btnp(4) then
-		if selector>0 and selector<#menu+1 then
-		if selector==1 then
-			itmchoice=lemons
-		elseif selector==2 then
-			itmchoice=sugar
-		elseif selector==3 then
-			itmchoice=cups
-		else
-			itmchoice=0
-		end
-		purchase(prices[selector],itmchoice)
-	end
+		purchase(selector)
 	end
 end
 
@@ -94,8 +83,8 @@ function drawgame()
 	print(funds,(ix+5)-(#funds*4-40),iy+50,0)
 		-- print store prices
 	for i=1,#inventory do
-		available=" "..inventory[i].avail
-		print(available,(ix+5)-(#available*4-40),iy+5+10*i,0)
+		current=" "..inventory[i].owned
+		print(current,(ix+5)-(#current*4-40),iy+5+10*i,0)
 	end
 	
 	
@@ -116,8 +105,12 @@ function drawgame()
 	end
 end
 
-function purchase()	
-	
+function purchase(item)	
+	choice=inventory[item]
+	if money>=choice.cost then
+		money-=choice.cost
+		choice.owned+=1
+	end
 end
 
 function initinventory()
@@ -127,12 +120,12 @@ function initinventory()
 		,avail=100
 		,owned=0
 		,cost=50
-		}
+		},
 		{name="sugar"
 		,avail=100
 		,owned=0
 		,cost=10
-		}
+		},
 		{name="cups"
 		,avail=100
 		,owned=0
