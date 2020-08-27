@@ -14,6 +14,7 @@ function _init()
 	cups=0
 	prices={5,2,10}
 	menu={1,2,3}
+
 end
 
 function _update60()
@@ -57,12 +58,23 @@ function updategame()
 		end
 	end
 	if btnp(3) then
-		if selector>0 then
+		if selector>1 then
 			selector-=1
 		end
 	end
 	if btnp(4) then
-		purchase(prices[selector],lemons)
+		if selector>0 and selector<#menu+1 then
+		if selector==1 then
+			itmchoice=lemons
+		elseif selector==2 then
+			itmchoice=sugar
+		elseif selector==3 then
+			itmchoice=cups
+		else
+			itmchoice=0
+		end
+		purchase(prices[selector],itmchoice)
+	end
 	end
 end
 
@@ -110,10 +122,16 @@ end
 
 function purchase(cost,item)	
 	_price=cost
-	_item=item
+ _item=item
 	if money>_price then
 		money=money-_price
-		_item+=1
+		if _item==lemons then
+			lemons+=1
+		elseif _item==sugar then
+			sugar+=1
+		elseif _item==cups then
+			cups+=1
+		end
 	end
 end
 
