@@ -7,6 +7,11 @@ __lua__
 function _init()
 	cls()
 	mode="start"
+	lemons=0
+	sugar=0
+	cups=0
+	menu={"lemons","sugar","cups"}
+	selector=0
 end
 
 function _update60()
@@ -44,12 +49,43 @@ function drawstart()
 end
 
 function updategame()
-	cls(10)
-	
+	debug=selector
+	if btnp(2) then
+		if selector<#menu then
+			selector+=1
+		end
+	end
+	if btnp(3) then
+		if selector>0 then
+			selector-=1
+		end
+	end
+	if btnp(4) then
+	end
 end
 
 function drawgame()
+	cls(10)
+	fillp()
+	
+	-- print debug
+	print(debug,10,125,8)
+	
+	-- player inventory
+	rectfill(10,10,60,100,7)
+	print("lemons: "..lemons,15,15,0)
+	print("sugar: "..sugar,15,25,0)
+	print("cups: "..cups,15,35,0)
 
+	-- store
+	local sx,sy
+	sx=70
+	sy=10
+	rectfill(sx,sy,sx+45,sy+90,7)
+	print("➡️")
+	print("lemons: "..lemons,sx+5,sy+5,0)
+	print("sugar: "..sugar,sx+5,sy+15,0)
+	print("cups: "..cups,sx+5,sy+25,0)	
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
