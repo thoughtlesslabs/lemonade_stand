@@ -10,6 +10,9 @@ function _init()
 	selector=0
 	money=1000
 	menu={1,2,3}
+	selx=65
+	sely=22
+	selchange=0
 	initinventory()
 end
 
@@ -50,12 +53,14 @@ end
 function updategame()
 	if btnp(2) then
 		if selector<#menu then
-			selector+=1
+			selector-=1
+			sely-=10
 		end
 	end
 	if btnp(3) then
 		if selector>1 then
-			selector-=1
+			selector+=1
+			sely+=10
 		end
 	end
 	if btnp(4) then
@@ -69,6 +74,7 @@ function drawgame()
 	print(_item,10,100,8)
 	print(_price,10,110,8)
 	print(selector,10,80,8)
+	
 	-- player inventory
 	local ix,iy,funds
 	funds=" "..money
@@ -87,12 +93,11 @@ function drawgame()
 		print(current,(ix+5)-(#current*4-40),iy+5+10*i,0)
 	end
 	
-	
 	-- store
 	local sx,sy
-	sx=70
+	sx=65
 	sy=10
-	rectfill(sx,sy,sx+45,sy+60,7)
+	rectfill(sx,sy,sx+50,sy+60,7)
 	print("store",sx+5,sy+5,0)
 	print("lEMONS: ",sx+5,sy+15,0)
 	print("sUGAR: ",sx+5,sy+25,0)
@@ -103,6 +108,8 @@ function drawgame()
 		price=" "..inventory[i].cost
 		print(price,(sx+5)-(#price*4-40),sy+5+10*i,0)
 	end
+	
+		rect(selx,sely,selx+50,sely+10,8)
 end
 
 function purchase(item)	
