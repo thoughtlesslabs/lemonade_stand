@@ -25,6 +25,7 @@ function _init()
 	sely=sy+11
 	c=0
 	initinventory()
+	people={}
 end
 
 function _update60()
@@ -131,7 +132,6 @@ end
 function drawgame()
 	cls(10)
 	fillp()
-	print(debug)
 	
 	-- menu selection indicator
 	rectfill(menux,menuy,menudx,menudy,2)
@@ -196,6 +196,7 @@ function drawgame()
 end
 
 function updateday()
+ updatepeople()
  -- set number of people
  -- set chance of purchase
 	-- use recipe to determine
@@ -207,7 +208,7 @@ function updateday()
 		inventory[3].owned=0
 	end
 	
-	if inventory[3].owned==0 then
+	if #people==0 then
 		mode="game"
 		levelstart=true
 	end
@@ -216,7 +217,9 @@ end
 function drawday()
  -- need screen for running calcs
 	cls()
-	print(inventory[3].owned,10,10,7)
+	drawpeople()
+	debug=#people
+	print(debug,10,10,8)
 end
 
 function updatebalance()
@@ -261,8 +264,8 @@ function weather()
 	wspr=chooseweather
 		
 	if weather==0 then
-		people=20+flr(rnd(30))
-		purchase=0
+		customers=20+rnd(10)
+		spawnperson(customers)
 	elseif weather==2 then
 	elseif weather==4 then
 	elseif weather==6 then
@@ -297,6 +300,46 @@ function initinventory()
 	}	
 end	
 		
+-->8
+-- people generator
+
+function addpeople(_x,_dx)
+	p={}
+	p.x=_x
+	p.y=90
+	p.dx=_dx
+	add(people,p)
+end
+
+function spawnperson(ppl)
+	for i=1,ppl do
+		local direction=flr(rnd(2)+1)
+		local pdx=rnd()+0.2
+		if direction==1 then
+			pdx=-pdx
+		end
+		addpeople(rnd(100),pdx)
+	end
+end
+
+function updatepeople()
+	local _p
+	for i=#people,1,-1 do
+		_p=people[i]
+		if _p.x<0 or _p.x>128 then
+			del(people,_p)
+		else	
+		_p.x+=_p.dx
+		end
+	end
+end
+
+function drawpeople()
+	for i=1,#people do
+	 _p = people[i]
+		print("🐱",_p.x,_p.y,8)
+	end
+end
 __gfx__
 cccccccccccccccccccccccccccccccccccccccccccccccc11111111111111111111111111111111000000000000000000000000000000000000000000000000
 ccccccccccccccccccccc999999cccccccccc999999ccccc11111777111111111111177711111111000000000000000000000000000000000000000000000000
