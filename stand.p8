@@ -51,23 +51,24 @@ end
 
 function updategame()
 	if activemenu==1 then
-	if btnp(2) then
-		if selector>1 then
-			selector-=1
-			sely-=10
+		if btnp(2) then
+			if selector>1 then
+				selector-=1
+				sely-=10
+			end
 		end
-	end
-	if btnp(3) then
-		if selector<#inventory then
-			selector+=1
-			sely+=10
+		if btnp(3) then
+			if selector<#inventory then
+				selector+=1
+				sely+=10
+			end
 		end
+		if btnp(5) then
+			purchase(selector)
+		end	
+	elseif activemenu==2 then
 	end
-elseif activemenu=2 then
-end
-	if btnp(5) then
-		purchase(selector)
-	end
+
 	if btnp(4) then
 		switchmenu()
 	end
@@ -79,8 +80,10 @@ function drawgame()
 	print(_item,10,100,8)
 	print(_price,10,110,8)
 	print(selector,10,80,8)
+	print(activemenu,10,120,8)
 	
-	--
+	-- menu selection indicator
+	rect(menux,menuy)
 	
 	-- player inventory
 	local ix,iy,funds
@@ -129,11 +132,11 @@ function purchase(item)
 	end
 end
 
-function switchmenu(current)
-	if current==1 then
-		current=2
-	elseif current==2 then
-		current=1
+function switchmenu()
+	if activemenu==1 then
+		activemenu=2
+	elseif activemenu==2 then
+		activemenu=1
 	end
 end
 
