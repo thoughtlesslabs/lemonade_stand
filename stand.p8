@@ -27,6 +27,7 @@ function _init()
 	people={}
 	customers=0
 	weathername="none"
+	drinks=0
 end
 
 function _update60()
@@ -98,13 +99,11 @@ function updategame()
 		local make=inventory[recipeselector]
 		if btnp(0) then
 			if make.recipe>0 then
-				make.owned+=1
 				make.recipe-=1
 		end
 	end
 		if btnp(1) then
 			if make.owned>0 then
-				make.owned-=1
 				make.recipe+=1
 			end		
 		end
@@ -211,18 +210,14 @@ function updateday()
 	-- if cups avail then sell
 	-- day ends when cups=0
 	makelemonade()
-	if startday then
-		for i=1,#people do
-		 _ppls=people[i].chance
-			if _ppls>=rand then
-				if inventory[3].owned>0 then
-					inventory[3].owned-=1
-				end
+	for i=1,#people do
+		_ppls=people[i].chance
+		if _ppls>=rand then
+			if drinks>0 then
+				drinks-=1
 			end
 		end
-	startday=false
 	end
-
 	
 	updatepeople()
 	
@@ -241,6 +236,7 @@ function drawday()
 	print(people[i].chance,10,10*i,7)
 	print(rand,50,10*i,7)
 	end
+	print(drinks,80,40,7)
 end
 
 function updatebalance()
@@ -335,8 +331,19 @@ function initinventory()
 end	
 		
 function makelemonade()
-	drinks=
-	reci
+	lem=inventory[1]
+	sug=inventory[2]
+	cps=inventory[3]
+	
+	if (lem.owned-lem.recipe)>=0
+	and (sug.owned-sug.recipe)>=0
+	and (cps.owned-1)>=0
+	then
+		lem.owned=lem.owned-lem.recipe
+		sug.owned=sug.owned-sug.recipe
+		cps.owned=cps.owned-1
+		drinks+=1
+	end
 end
 -->8
 -- people generator
