@@ -166,9 +166,9 @@ function drawgame()
 	
 	-- print store prices
 	for i=1,#inventory do
-		price=" "..inventory[i].cost
+		expense=" "..inventory[i].cost
 		print("$ ",sx+35,sy+5+8*i,0)
-		print(price,(sx+10)-(#price*4-40),sy+5+8*i,0)
+		print(expense,(sx+10)-(#expense*4-40),sy+5+8*i,0)
 	end
 	
 	-- recipe creator
@@ -176,10 +176,11 @@ function drawgame()
 	print("recipe",rx+5,ry+5,0)
 	print("lEMONS: ",rx+5,ry+13,0)
 	print("sUGAR: ",rx+5,ry+21,0)
+	print("pRICE ",rx+5,ry+29,0)
 	print("❎ to start day",rx+6,ry+38,9)
 
 		-- print current recipe
-	for i=1,#inventory-1 do
+	for i=1,#inventory do
 		if recipeselector==i then
 			col=9
 		else
@@ -209,12 +210,31 @@ function updateday()
 	-- check if cup avail 
 	-- if cups avail then sell
 	-- day ends when cups=0
-	makelemonade()
+	
+	-- make drinks for selling
+	lem=inventory[1]
+	sug=inventory[2]
+	cps=inventory[3]
+	
+	if lem.recipe>0 and sug.recipe>0 then
+	if (lem.owned-lem.recipe)>=0
+	and (sug.owned-sug.recipe)>=0
+	and (cps.owned-1)>=0
+	then
+		lem.owned=lem.owned-lem.recipe
+		sug.owned=sug.owned-sug.recipe
+		cps.owned=cps.owned-1
+		drinks+=1
+	end
+	end
+	
+	-- sell drinks for cash
 	for i=1,#people do
 		_ppls=people[i].chance
 		if _ppls>=rand then
 			if drinks>0 then
 				drinks-=1
+				money+=1000
 			end
 		end
 	end
@@ -326,24 +346,9 @@ function initinventory()
 		,owned=0
 		,cost=5
 		,recipe=0
-		}
+		},
+		price=25
 	}	
-end	
-		
-function makelemonade()
-	lem=inventory[1]
-	sug=inventory[2]
-	cps=inventory[3]
-	
-	if (lem.owned-lem.recipe)>=0
-	and (sug.owned-sug.recipe)>=0
-	and (cps.owned-1)>=0
-	then
-		lem.owned=lem.owned-lem.recipe
-		sug.owned=sug.owned-sug.recipe
-		cps.owned=cps.owned-1
-		drinks+=1
-	end
 end
 -->8
 -- people generator
