@@ -122,6 +122,7 @@ function updategame()
 		-- start day
 		if btnp(5) then
 			mode="day"
+			startday=true
 		end
 	end
 	-- change menu
@@ -201,7 +202,7 @@ function drawgame()
 end
 
 function updateday()
- updatepeople()
+
  -- set number of people
  -- set chance of purchase
 	-- use recipe to determine
@@ -209,9 +210,21 @@ function updateday()
 	-- check if cup avail 
 	-- if cups avail then sell
 	-- day ends when cups=0
-	if btnp(5) then
-		inventory[3].owned=0
+	makelemonade()
+	if startday then
+		for i=1,#people do
+		 _ppls=people[i].chance
+			if _ppls>=rand then
+				if inventory[3].owned>0 then
+					inventory[3].owned-=1
+				end
+			end
+		end
+	startday=false
 	end
+
+	
+	updatepeople()
 	
 	if #people==0 then
 		levelstart=true
@@ -224,6 +237,10 @@ function drawday()
  -- need screen for running calcs
 	cls()
 	drawpeople()
+	for i=1,#people do
+	print(people[i].chance,10,10*i,7)
+	print(rand,50,10*i,7)
+	end
 end
 
 function updatebalance()
@@ -270,27 +287,26 @@ function weather()
 	if chooseweather==0 then
 		customers=20+rnd(10)
 		weathername="clear"
-		purchance=0.8
+		purchance=0.7
 	elseif chooseweather==2 then
 		customers=30+rnd(10)	
 		weathername="sunny"
-		purchance=0.9
+		purchance=0.8
 	elseif chooseweather==4 then
 		customers=15+rnd(10)	
 		weathername="cloudy"
-		purchance=0.7
+		purchance=0.6
 	elseif chooseweather==6 then
 		customers=10+rnd(10)
 		weathername="rainy"	
-		purchance=0.6
+		purchance=0.5
 	elseif chooseweather==8 then
 		customers=5+rnd(10)
 		weathername="stormy"	
-		purchance=0.4
+		purchance=0.3
 	end
+	rand=mid(0,0.2+flr(rnd(1*10))/10,1)
 	spawnperson(customers,purchance)
-	-- set number of people
-	-- set chance of purchase
 end
 
 -- add inventory
@@ -318,6 +334,10 @@ function initinventory()
 	}	
 end	
 		
+function makelemonade()
+	drinks=
+	reci
+end
 -->8
 -- people generator
 
@@ -334,11 +354,11 @@ function spawnperson(ppl,chance)
 	for i=1,ppl do
 		local direction=flr(rnd(2)+1)
 		local pdx=rnd()+0.25
-		local pc=chance+rnd()
+		local _pc=mid(0,chance+(flr(rnd(0.2*10))/10),1)
 		if direction==1 then
 			pdx=-pdx
 		end
-		addpeople(rnd(100),pdx,pc)
+		addpeople(rnd(100),pdx,_pc)
 	end
 end
 
