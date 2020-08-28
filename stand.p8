@@ -32,6 +32,8 @@ function _update60()
 		updatestart()
 	elseif mode=="game" then
 		updategame()
+	elseif mode=="day" then
+		updateday()
 	elseif mode=="balance" then
 		updatebalance()
 	elseif mode=="gameover" then
@@ -44,6 +46,8 @@ function _draw()
 		drawstart()	
 	elseif mode=="game" then
 		drawgame()
+	elseif mode=="day" then
+		drawday()
 	elseif mode=="balance" then	
 		drawbalance()
 	elseif mode=="gameover" then
@@ -70,6 +74,7 @@ function updategame()
 	if levelstart then
 		weather()
 		switchmenu()
+		levelstart=false
 	end
 	if activemenu==1 then
 		if btnp(2) then
@@ -111,8 +116,10 @@ function updategame()
 				recipeselector+=1
 			end			
 		end
+		
+		-- start day
 		if btnp(5) then
-
+			mode="day"
 		end
 	end
 	-- change menu
@@ -171,15 +178,15 @@ function drawgame()
 	print("lEMONS: ",rx+5,ry+13,0)
 	print("sUGAR: ",rx+5,ry+21,0)
 	print("cUPS: ",rx+5,ry+29,0)
+	print("❎ to start day",rx+6,ry+38,9)
 
 		-- print current recipe
 	for i=1,#inventory do
 		if recipeselector==i then
-			col=9
+			col=3
 		else
 			col=0
 		end
-		
 		rec=" "..inventory[i].recipe
 		print("⬅️",rx+40,ry+5+8*i,col)
 		print(rec,(rx+18)-(#rec*4-40),ry+5+8*i,col)
@@ -192,6 +199,22 @@ function drawgame()
 	spr(wspr,wx+10,wy+15,2,2)	
 end
 
+function updateday()
+end
+
+function drawday()
+ -- need screen for running calcs
+ mode="start"
+end
+
+function updatebalance()
+end
+
+function drawbalance()
+end
+
+
+-- purchase based on item
 function purchase(item)	
 	choice=inventory[item]
 	if money>=choice.cost then
@@ -200,15 +223,18 @@ function purchase(item)
 	end
 end
 
+-- switch active menu
 function switchmenu()
 	if activemenu==1 then
 		activemenu=2
+		-- move active menu box
 		menux=rx-3
 		menuy=ry-3
 		menudx=rx+77
 		menudy=ry+48
 	elseif activemenu==2 then
 		activemenu=1
+		-- move active menu box
 		menux=sx-3
 		menuy=sy-3
 		menudx=sx+53
@@ -216,11 +242,17 @@ function switchmenu()
 	end
 end
 
+-- weather randomizer
 function weather()
-		wspr=flr(rnd(8)+1/2)
-		levelstart=false
+		-- show forecast sprite
+		wspr=flr(rnd(8)+2/2)
+		
+		-- set number of people
+		-- set chance of purchase
+		
 end
 
+-- add inventory
 function initinventory()
 	inventory=
 	{
