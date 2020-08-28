@@ -61,6 +61,7 @@ function updatestart()
 	if btnp(5) then
 		mode="game"
 		levelstart=true
+		switchmenu()
 	end
 end
 
@@ -75,7 +76,6 @@ end
 function updategame()
 	if levelstart then
 		weather()
-		switchmenu()
 		levelstart=false
 	end
 	if activemenu==1 then
@@ -213,8 +213,9 @@ function updateday()
 	end
 	
 	if #people==0 then
-		mode="game"
 		levelstart=true
+		switchmenu()
+		mode="game"
 	end
 end
 
@@ -222,8 +223,6 @@ function drawday()
  -- need screen for running calcs
 	cls()
 	drawpeople()
-	debug=#people
-	print(debug,10,10,8)
 end
 
 function updatebalance()
@@ -327,7 +326,7 @@ end
 function spawnperson(ppl)
 	for i=1,ppl do
 		local direction=flr(rnd(2)+1)
-		local pdx=rnd()+0.2
+		local pdx=rnd()+0.25
 		if direction==1 then
 			pdx=-pdx
 		end
