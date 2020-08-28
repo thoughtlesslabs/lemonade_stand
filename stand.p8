@@ -13,7 +13,7 @@ function _init()
 	activemenu=2
 	money=1000
 	levelstart=false
-	sx=70
+	sx=65
 	sy=5
 	ix=5
 	iy=5
@@ -132,10 +132,6 @@ function drawgame()
 	cls(10)
 	fillp()
 	print(debug)
-	print(_item,80,100,8)
-	print(_price,80,110,8)
-	print(selector,80,80,8)
-	print(activemenu,80,120,8)
 	
 	-- menu selection indicator
 	rectfill(menux,menuy,menudx,menudy,2)
@@ -156,34 +152,34 @@ function drawgame()
 	end
 	
 	-- store
-	rectfill(sx,sy,sx+50,sy+60,7)
+	rectfill(sx,sy,sx+53,sy+60,7)
+	-- store selector
+	rectfill(selx,sely,selx+53,sely+8,9)
+	-- store list
 	print("store",sx+5,sy+5,0)
 	print("lEMONS: ",sx+5,sy+13,0)
 	print("sUGAR: ",sx+5,sy+21,0)
 	print("cUPS: ",sx+5,sy+29,0)	
-	print("❎ to buy",sx+5,sy+50,9)	
+	print("❎ to buy",sx+9,sy+50,9)	
 	
 	-- print store prices
 	for i=1,#inventory do
 		price=" "..inventory[i].cost
-		print(price,(sx+5)-(#price*4-40),sy+5+8*i,0)
+		print("$ ",sx+35,sy+5+8*i,0)
+		print(price,(sx+10)-(#price*4-40),sy+5+8*i,0)
 	end
 	
-	-- store selector
-	rect(selx,sely,selx+50,sely+8,8)
-
 	-- recipe creator
 	rectfill(rx,ry,rx+74,ry+45,7)
 	print("recipe",rx+5,ry+5,0)
 	print("lEMONS: ",rx+5,ry+13,0)
 	print("sUGAR: ",rx+5,ry+21,0)
-	print("cUPS: ",rx+5,ry+29,0)
 	print("❎ to start day",rx+6,ry+38,9)
 
 		-- print current recipe
-	for i=1,#inventory do
+	for i=1,#inventory-1 do
 		if recipeselector==i then
-			col=3
+			col=9
 		else
 			col=0
 		end
@@ -200,12 +196,27 @@ function drawgame()
 end
 
 function updateday()
- mode="start"
+ -- set number of people
+ -- set chance of purchase
+	-- use recipe to determine
+	-- the number of cups avail
+	-- check if cup avail 
+	-- if cups avail then sell
+	-- day ends when cups=0
+	if btnp(5) then
+		inventory[3].owned=0
+	end
+	
+	if inventory[3].owned==0 then
+		mode="game"
+		levelstart=true
+	end
 end
 
 function drawday()
  -- need screen for running calcs
-
+	cls()
+	print(inventory[3].owned,10,10,7)
 end
 
 function updatebalance()
@@ -238,18 +249,27 @@ function switchmenu()
 		-- move active menu box
 		menux=sx-3
 		menuy=sy-3
-		menudx=sx+53
+		menudx=sx+56
 		menudy=sy+63	
 	end
 end
 
 -- weather randomizer
 function weather()
-		-- show forecast sprite
-		wspr=flr(rnd(9)/2)*2
-		-- set number of people
-		-- set chance of purchase
+	-- show forecast sprite
+	chooseweather=flr(rnd(9)/2)*2
+	wspr=chooseweather
 		
+	if weather==0 then
+		people=20+flr(rnd(30))
+		purchase=0
+	elseif weather==2 then
+	elseif weather==4 then
+	elseif weather==6 then
+	elseif weather==8 then
+	end
+	-- set number of people
+	-- set chance of purchase
 end
 
 -- add inventory
@@ -271,7 +291,7 @@ function initinventory()
 		{name="cups"
 		,avail=100
 		,owned=0
-		,cost=20
+		,cost=5
 		,recipe=0
 		}
 	}	
