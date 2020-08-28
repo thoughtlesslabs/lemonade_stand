@@ -23,9 +23,10 @@ function _init()
 	wy=75
 	selx=sx
 	sely=sy+11
-	c=0
 	initinventory()
 	people={}
+	customers=0
+	weathername="none"
 end
 
 function _update60()
@@ -193,6 +194,9 @@ function drawgame()
 	rectfill(wx,wy,wx+35,wy+45,7)
 	print("weather",wx+5,ry+5,0)
 	spr(wspr,wx+10,wy+15,2,2)	
+	local wn
+	wn=weathername
+	print(wn,62+((wx/2)-(#wn*2)),wy+35,0)
 end
 
 function updateday()
@@ -263,14 +267,23 @@ function weather()
 	chooseweather=flr(rnd(9)/2)*2
 	wspr=chooseweather
 		
-	if weather==0 then
+	if chooseweather==0 then
 		customers=20+rnd(10)
-		spawnperson(customers)
-	elseif weather==2 then
-	elseif weather==4 then
-	elseif weather==6 then
-	elseif weather==8 then
+		weathername="clear"
+	elseif chooseweather==2 then
+		customers=30+rnd(10)	
+		weathername="sunny"
+	elseif chooseweather==4 then
+		customers=15+rnd(10)	
+		weathername="cloudy"
+	elseif chooseweather==6 then
+		customers=10+rnd(10)
+		weathername="rainy"	
+	elseif chooseweather==8 then
+		customers=5+rnd(10)
+		weathername="stormy"	
 	end
+	spawnperson(customers)
 	-- set number of people
 	-- set chance of purchase
 end
