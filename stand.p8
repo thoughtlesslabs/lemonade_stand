@@ -8,6 +8,7 @@ function _init()
 	cls()
 	mode="start"
 	selector=1
+	recipeselector=1
 	activemenu=1
 	money=1000
 	selx=65
@@ -20,6 +21,8 @@ function _update60()
 		updatestart()
 	elseif mode=="game" then
 		updategame()
+	elseif mode=="balance" then
+		updatebalance()
 	elseif mode=="gameover" then
 		updategameover()
 	end
@@ -30,6 +33,8 @@ function _draw()
 		drawstart()	
 	elseif mode=="game" then
 		drawgame()
+	elseif mode=="balance" then	
+		drawbalance()
 	elseif mode=="gameover" then
 		drawgameover()
 	end
@@ -67,8 +72,34 @@ function updategame()
 			purchase(selector)
 		end	
 	elseif activemenu==2 then
+		local make=inventory[recipeselector]
+		if btnp(0) then
+			if make.recipe>0 then
+				make.owned+=1
+				make.recipe-=1
+		end
 	end
+		if btnp(1) then
+			if make.owned>0 then
+				make.owned-=1
+				make.recipe+=1
+			end		
+		end
+		if btnp(2) then
+			if recipeselector>1 then
+				recipeselector-=1
+			end
+		end
+		if btnp(3) then
+			if recipeselector<#inventory then
+				recipeselector+=1
+			end			
+		end
+		if btnp(5) then
 
+		end
+	end
+	-- change menu
 	if btnp(4) then
 		switchmenu()
 	end
@@ -77,10 +108,10 @@ end
 function drawgame()
 	cls(10)
 	fillp()
-	print(_item,10,100,8)
-	print(_price,10,110,8)
-	print(selector,10,80,8)
-	print(activemenu,10,120,8)
+	print(_item,80,100,8)
+	print(_price,80,110,8)
+	print(selector,80,80,8)
+	print(activemenu,80,120,8)
 	
 	-- menu selection indicator
 	rect(menux,menuy)
@@ -122,6 +153,28 @@ function drawgame()
 	
 	-- store selector
 	rect(selx,sely,selx+50,sely+10,8)
+
+	-- recipe creator
+	local rx,ry
+	rx=10
+	ry=80
+	rectfill(rx,ry,rx+80,ry+50,7)
+	print("recipe",rx+5,ry+5,0)
+	print("lEMONS: ",rx+5,ry+15,0)
+	print("sUGAR: ",rx+5,ry+25,0)
+	print("cUPS: ",rx+5,ry+35,0)
+
+
+		-- print current recipe
+	for i=1,#inventory do
+		rec=" "..inventory[i].recipe
+		print("⬅️",rx+40,ry+5+10*i,0)
+		print(rec,(rx+18)-(#rec*4-40),ry+5+10*i,0)
+		print("➡️",rx+60,ry+5+10*i,0)
+	end
+	
+	--weather forecast
+
 end
 
 function purchase(item)	
@@ -147,16 +200,19 @@ function initinventory()
 		,avail=100
 		,owned=0
 		,cost=50
+		,recipe=0
 		},
 		{name="sugar"
 		,avail=100
 		,owned=0
 		,cost=10
+		,recipe=0
 		},
 		{name="cups"
 		,avail=100
 		,owned=0
 		,cost=20
+		,recipe=0
 		}
 	}	
 end	
