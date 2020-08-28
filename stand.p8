@@ -200,11 +200,12 @@ function drawgame()
 end
 
 function updateday()
+ mode="start"
 end
 
 function drawday()
  -- need screen for running calcs
- mode="start"
+
 end
 
 function updatebalance()
@@ -245,8 +246,7 @@ end
 -- weather randomizer
 function weather()
 		-- show forecast sprite
-		wspr=flr(rnd(8)+2/2)
-		
+		wspr=flr(rnd(9)/2)*2
 		-- set number of people
 		-- set chance of purchase
 		
