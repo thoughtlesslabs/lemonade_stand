@@ -144,6 +144,7 @@ function drawgame()
 	print("lEMONS: ",ix+5,iy+13,0)
 	print("sUGAR: ",ix+5,iy+21,0)
 	print("cUPS: ",ix+5,iy+29,0)
+	print("money ",ix+5,iy+42,0)
 	print("$ ",ix+5,iy+50,0)
 	print(funds,(ix+5)-(#funds*4-40),iy+50,0)
 		-- print current inventory
@@ -269,20 +270,25 @@ function weather()
 	if chooseweather==0 then
 		customers=20+rnd(10)
 		weathername="clear"
+		purchance=0.8
 	elseif chooseweather==2 then
 		customers=30+rnd(10)	
 		weathername="sunny"
+		purchance=0.9
 	elseif chooseweather==4 then
 		customers=15+rnd(10)	
 		weathername="cloudy"
+		purchance=0.7
 	elseif chooseweather==6 then
 		customers=10+rnd(10)
 		weathername="rainy"	
+		purchance=0.6
 	elseif chooseweather==8 then
 		customers=5+rnd(10)
 		weathername="stormy"	
+		purchance=0.4
 	end
-	spawnperson(customers)
+	spawnperson(customers,purchance)
 	-- set number of people
 	-- set chance of purchase
 end
@@ -315,22 +321,24 @@ end
 -->8
 -- people generator
 
-function addpeople(_x,_dx)
+function addpeople(_x,_dx,_pchance)
 	p={}
 	p.x=_x
 	p.y=90
 	p.dx=_dx
+	p.chance=_pchance
 	add(people,p)
 end
 
-function spawnperson(ppl)
+function spawnperson(ppl,chance)
 	for i=1,ppl do
 		local direction=flr(rnd(2)+1)
 		local pdx=rnd()+0.25
+		local pc=chance+rnd()
 		if direction==1 then
 			pdx=-pdx
 		end
-		addpeople(rnd(100),pdx)
+		addpeople(rnd(100),pdx,pc)
 	end
 end
 
