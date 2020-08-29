@@ -28,6 +28,7 @@ function _init()
 	customers=0
 	weathername="none"
 	drinks=0
+	drinkprice=0
 end
 
 function _update60()
@@ -98,13 +99,33 @@ function updategame()
 	elseif activemenu==2 then
 		local make=inventory[recipeselector]
 		if btnp(0) then
+			if recipeselector==3 then
+				if drinkprice>0 then
+				drinkprice-=5
+				else
+				drinkprice=95
+				end
+			else
 			if make.recipe>0 then
 				make.recipe-=1
+			else
+				make.recipe=99
+			end
 		end
 	end
 		if btnp(1) then
-			if make.owned>0 then
+			if recipeselector==3 then
+				if drinkprice<94 then
+				drinkprice+=5
+				else
+				drinkprice=0
+				end
+			else
+			if make.recipe<99 then
 				make.recipe+=1
+			else
+				make.recipe=0
+			end
 			end		
 		end
 		if btnp(2) then
@@ -176,7 +197,7 @@ function drawgame()
 	print("recipe",rx+5,ry+5,0)
 	print("lEMONS: ",rx+5,ry+13,0)
 	print("sUGAR: ",rx+5,ry+21,0)
-	print("pRICE ",rx+5,ry+29,0)
+	print("pRICE: ",rx+5,ry+29,0)
 	print("❎ to start day",rx+6,ry+38,9)
 
 		-- print current recipe
@@ -186,10 +207,15 @@ function drawgame()
 		else
 			col=0
 		end
-		rec=" "..inventory[i].recipe
+		local rec=" "..inventory[i].recipe
+		local prc=" "..drinkprice
 		print("⬅️",rx+40,ry+5+8*i,col)
-		print(rec,(rx+18)-(#rec*4-40),ry+5+8*i,col)
 		print("➡️",rx+60,ry+5+8*i,col)
+		if i<3 then
+		print(rec,(rx+18)-(#rec*4-40),ry+5+8*i,col)
+		else
+		print(prc,(rx+18)-(#prc*4-40),ry+5+8*i,col)
+		end
 	end
 	
 	--weather forecast
@@ -346,8 +372,7 @@ function initinventory()
 		,owned=0
 		,cost=5
 		,recipe=0
-		},
-		price=25
+		}
 	}	
 end
 -->8
