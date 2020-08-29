@@ -29,6 +29,7 @@ function _init()
 	weathername="none"
 	drinks=0
 	drinkprice=0
+	option="buy"
 end
 
 function _update60()
@@ -81,6 +82,12 @@ function updategame()
 		levelstart=false
 	end
 	if activemenu==1 then
+		if btnp(0) then
+			option="buy"
+		end
+		if btnp(1) then
+			option="sell"
+		end
 		if btnp(2) then
 			if selector>1 then
 				selector-=1
@@ -183,11 +190,17 @@ function drawgame()
 	print("lEMONS: ",sx+5,sy+13,0)
 	print("sUGAR: ",sx+5,sy+21,0)
 	print("cUPS: ",sx+5,sy+29,0)	
-	print("❎ to buy",sx+9,sy+50,9)	
+	print("❎ confirm",sx+9,sy+50,9)	
+	
+	-- print buy or sell option
+	local bs=" "..option
+	print("⬅️",sx+10,sy+40,col)
+	print("➡️",sx+36,sy+40,col)
+	print(bs,58+((sx/2)-(#bs*2)),sy+40,col)
 	
 	-- print store prices
 	for i=1,#inventory do
-		expense=" "..inventory[i].cost
+		local expense=" "..inventory[i].cost
 		print("$ ",sx+35,sy+5+8*i,0)
 		print(expense,(sx+10)-(#expense*4-40),sy+5+8*i,0)
 	end
@@ -295,9 +308,16 @@ end
 -- purchase based on item
 function purchase(item)	
 	choice=inventory[item]
-	if money>=choice.cost then
-		money-=choice.cost
-		choice.owned+=1
+	if option=="buy" then
+		if money>=choice.cost then
+			money-=choice.cost
+			choice.owned+=1
+		end
+	elseif option=="sell" then
+		if choice.owned>0 then
+			money+=choice.cost
+			choice.owned-=1
+		end
 	end
 end
 
