@@ -194,9 +194,9 @@ function drawgame()
 	
 	-- print buy or sell option
 	local bs=" "..option
-	print("⬅️",sx+10,sy+40,col)
-	print("➡️",sx+36,sy+40,col)
-	print(bs,58+((sx/2)-(#bs*2)),sy+40,col)
+	print("⬅️",sx+10,sy+40,0)
+	print("➡️",sx+36,sy+40,0)
+	print(bs,58+((sx/2)-(#bs*2)),sy+40,0)
 	
 	-- print store prices
 	for i=1,#inventory do
