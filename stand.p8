@@ -271,7 +271,7 @@ function updateday()
 	-- sell drinks for cash
 	for i=1,#people do
 		_ppls=people[i].chance
-		if _ppls>=rand then
+		if _ppls>=sentiment then
 			if drinks>0 then
 				drinks-=1
 				money+=drinkprice
@@ -291,7 +291,7 @@ function drawday()
 	cls()
 	drawpeople()
 	for i=1,drinks do
-		spr(10,10,10+8*i)
+		spr(10,10,10+9*i)
 	end
 end
 
@@ -364,7 +364,6 @@ function weather()
 		weathername="stormy"	
 		purchance=0.3
 	end
-	rand=mid(0,0.2+flr(rnd(1*10))/10,1)
 	spawnperson(customers,purchance)
 end
 
@@ -416,11 +415,11 @@ function addpeople(_x,_dx,_pchance)
 	add(people,p)
 end
 
-function spawnperson(ppl,chance)
+function spawnperson(ppl)
 	for i=1,ppl do
 		local direction=flr(rnd(2)+1)
 		local pdx=rnd()+0.25
-		local _pc=mid(0,chance+(flr(rnd(0.2*10))/10),1)
+		local _pc=mid(0,(flr(rnd(1*10))/10),1)
 		if direction==1 then
 			pdx=-pdx
 		end
