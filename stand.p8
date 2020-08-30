@@ -6,6 +6,9 @@ __lua__
 
 function _init()
 	cls()
+	recipevar=0
+	pricevar=0
+	selloption=0
 	debug=""
 	mode="start"
 	selector=1
@@ -30,7 +33,7 @@ function _init()
 	drinks=0
 	drinkprice=0
 	option="buy"
-	gamecountdown=400
+	gamecountdown=800
 end
 
 function _update60()
@@ -256,6 +259,8 @@ function updateday()
 	sug=inventory[2]
 	cps=inventory[3]
 	
+	recipe={lem.recipe,sug.recipe}
+	
 	if lem.recipe>0 and sug.recipe>0 then
 	if (lem.owned-lem.recipe)>=0
 	and (sug.owned-sug.recipe)>=0
@@ -270,14 +275,40 @@ function updateday()
 	
 	-- sell drinks for cash
 	for i=1,#people do
-		_ppls=people[i].chance
-		if _ppls>=sentiment then
-			if drinks>0 then
-				drinks-=1
-				money+=drinkprice
-			end
+	local _ppls=people[i]
+
+	if drinkprice > 70 then
+		pricevar=0.05
+	elseif drinkprice > 50 then
+		pricevar=0.1
+	elseif drinkprice > 30 then
+		pricevar=0.15
+	elseif drinkprice >15 then
+		pricevar=0.2
+	elseif drinkprice >=0 then
+		pricevar=0.25
+	end
+	
+	if recipe[1]>recipe[2] then
+		recipevar=0.15
+	elseif recipe[1]==recipe[2] then
+		recipevar=0.1
+	elseif recipe[1]==recipe[2] then
+		recipevar=0.05
+	end
+	
+	selloption=1-weatherchance-pricevar-recipevar
+	if _ppls.x>128 or _ppls.x<0 then	
+	if _ppls.chance>selloption then
+		if drinks>0 then
+			drinks-=1
+			money+=drinkprice
 		end
 	end
+	end
+end		
+
+--	checkbuy(_ppls,_ppls.chance,weatherchance,recipe,drinkprice)
 	
 	updatepeople()
 	
@@ -290,6 +321,14 @@ function drawday()
  -- need screen for running calcs
 	cls()
 	drawpeople()
+	print("pricevar: "..pricevar,10,10,8)
+	print("recipevar: "..recipevar,10,18,8)
+	print("drinkprice: "..drinkprice,10,26,8)
+	print("weather: "..weatherchance,10,34,8)
+	print("selloption: "..selloption,10,42,8)
+	for i=1,#people do
+		print(people[i].chance,80,5+6*i,8)
+	end
 	for i=1,drinks do
 		spr(10,10,10+9*i)
 	end
@@ -344,27 +383,27 @@ function weather()
 	wspr=chooseweather
 		
 	if chooseweather==0 then
-		customers=20+rnd(10)
+		customers=10
 		weathername="clear"
-		purchance=0.7
+		weatherchance=0.2
 	elseif chooseweather==2 then
-		customers=30+rnd(10)	
+		customers=10
 		weathername="sunny"
-		purchance=0.8
+		weatherchance=0.25
 	elseif chooseweather==4 then
-		customers=15+rnd(10)	
+		customers=10	
 		weathername="cloudy"
-		purchance=0.6
+		weatherchance=0.15
 	elseif chooseweather==6 then
-		customers=10+rnd(10)
+		customers=10
 		weathername="rainy"	
-		purchance=0.5
+		weatherchance=0.10
 	elseif chooseweather==8 then
-		customers=5+rnd(10)
+		customers=10
 		weathername="stormy"	
-		purchance=0.3
+		weatherchance=0.05
 	end
-	spawnperson(customers,purchance)
+	spawnperson(customers)
 end
 
 -- add inventory
@@ -419,11 +458,11 @@ function spawnperson(ppl)
 	for i=1,ppl do
 		local direction=flr(rnd(2)+1)
 		local pdx=rnd()+0.25
-		local _pc=mid(0,(flr(rnd(1*10))/10),1)
+		local _pc=mid(0,(flr(rnd(1*100))/100),1)
 		if direction==1 then
 			pdx=-pdx
 		end
-		addpeople(rnd(100),pdx,_pc)
+		addpeople(40+rnd(20),pdx,_pc)
 	end
 end
 
