@@ -299,12 +299,17 @@ function updateday()
 	
 	selloption=1-weatherchance-pricevar-recipevar
 	if _ppls.x>128 or _ppls.x<0 then	
-	if _ppls.chance>selloption then
-		if drinks>0 then
-			drinks-=1
-			money+=drinkprice
+		if _ppls.checked then
+			_ppls.visible=false
+		else
+			_ppls.checked=true
+			if _ppls.chance>selloption then
+				if drinks>0 then
+					drinks-=1
+					money+=drinkprice
+				end
+			end
 		end
-	end
 	end
 end		
 
@@ -450,6 +455,7 @@ function addpeople(_x,_dx,_pchance)
 	p.y=90
 	p.dx=_dx
 	p.chance=_pchance
+	p.checked=false
 	p.visible=true
 	add(people,p)
 end
