@@ -252,7 +252,7 @@ function updateday()
 	-- the number of cups avail
 	-- check if cup avail 
 	-- if cups avail then sell
-	-- day ends when cups=0
+	-- day ends when customers=0
 	
 	-- make drinks for selling
 	lem=inventory[1]
@@ -275,46 +275,48 @@ function updateday()
 	
 	-- sell drinks for cash
 	for i=1,#people do
-	local _ppls=people[i]
-
-	if drinkprice > 70 then
-		pricevar=0.05
-	elseif drinkprice > 50 then
-		pricevar=0.1
-	elseif drinkprice > 30 then
-		pricevar=0.15
-	elseif drinkprice >15 then
-		pricevar=0.2
-	elseif drinkprice >=0 then
-		pricevar=0.25
-	end
+		local _ppls=people[i]
 	
-	if recipe[1]>recipe[2] then
-		recipevar=0.15
-	elseif recipe[1]==recipe[2] then
-		recipevar=0.1
-	elseif recipe[1]==recipe[2] then
-		recipevar=0.05
-	end
-	
-	selloption=1-weatherchance-pricevar-recipevar
-	if _ppls.x>128 or _ppls.x<0 then	
-		if _ppls.checked then
-			_ppls.visible=false
-		else
-			_ppls.checked=true
-			if _ppls.chance>selloption then
-				if drinks>0 then
-					drinks-=1
-					money+=drinkprice
+		if drinkprice > 70 then
+			pricevar=-0.2
+		elseif drinkprice > 50 then
+			pricevar=-0.1
+		elseif drinkprice > 30 then
+			pricevar=0
+		elseif drinkprice >15 then
+			pricevar=0.1
+		elseif drinkprice >=5 then
+			pricevar=0.15
+		elseif drinkprice==0 then
+			pricevar=0.5
+		end
+		
+		if recipe[1]>recipe[2] then
+			recipevar=0.15
+		elseif recipe[1]==recipe[2] then
+			recipevar=0.1
+		elseif recipe[1]==recipe[2] then
+			recipevar=0.05
+		end
+		
+		selloption=1-weatherchance-pricevar-recipevar
+		if _ppls.x>128 or _ppls.x<0 then	
+			if _ppls.checked then
+				_ppls.visible=false
+			else
+				_ppls.checked=true
+				if _ppls.chance>selloption then
+					if drinks>0 then
+						drinks-=1
+						money+=drinkprice
+					end
 				end
 			end
 		end
-	end
-end		
+	end		
 
 	updatepeople()
-		if #people==0 then
+	if #people==0 then
 		resetgame()
 	end
 end
@@ -488,9 +490,9 @@ function drawpeople()
 	end
 end
 __gfx__
-cccccccccccccccccccccccccccccccccccccccccccccccc11111111111111111111111111111111000660000000000000000000000000000000000000000000
-ccccccccccccccccccccc999999cccccccccc999999ccccc11111777111111111111177711111111066776600000000000000000000000000000000000000000
-cccccccccccccccccccc99999999cccccccc99999999cccc11117777711777111111777771177711677777760000000000000000000000000000000000000000
+cccccccccccccccccccccccccccccccccccccccccccccccc11111111111111111111111111111111000000000000000000000000000000000000000000000000
+ccccccccccccccccccccc999999cccccccccc999999ccccc11111777111111111111177711111111066666600000000000000000000000000000000000000000
+cccccccccccccccccccc99999999cccccccc99999999cccc111177777117771111117777711777116aaaaaa60000000000000000000000000000000000000000
 ccccccccccccccccccc9999999999cccccc9999999999ccc11777777777777711177777777777771066666600000000000000000000000000000000000000000
 cccccccccccccccccc999999999999cccc999999999999cc77777777777766777777777777776677067777600000000000000000000000000000000000000000
 ccccccccccccccccc99999999999999cc99999999999999c76676677666666677667667766666667006776000000000000000000000000000000000000000000
