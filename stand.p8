@@ -33,7 +33,6 @@ function _init()
 	drinks=0
 	drinkprice=0
 	option="buy"
-	gamecountdown=800
 end
 
 function _update60()
@@ -168,7 +167,9 @@ function drawgame()
 	
 	-- menu selection indicator
 	rectfill(menux,menuy,menudx,menudy,2)
-
+	
+	if activemenu==1 then
+	end
 	-- player inventory
 	local funds=" "..money
 	rectfill(ix,iy,ix+50,iy+60,7)
@@ -245,7 +246,6 @@ function drawgame()
 end
 
 function updateday()
-	gamecountdown-=1
  -- set number of people
  -- set chance of purchase
 	-- use recipe to determine
@@ -313,11 +313,8 @@ function updateday()
 	end
 end		
 
---	checkbuy(_ppls,_ppls.chance,weatherchance,recipe,drinkprice)
-	
 	updatepeople()
-	
-	if gamecountdown<=0 then
+		if #people==0 then
 		resetgame()
 	end
 end
