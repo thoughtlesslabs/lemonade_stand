@@ -489,6 +489,22 @@ function drawpeople()
 		print("🐱",_p.x,_p.y,8)
 	end
 end
+-->8
+-- to do list
+
+-- adjust algo
+-- create balance sheet page
+--			- overview of day
+--			- money earned
+--			- product wasted
+-- 		- give customer feedback
+--     on recipe ie too sweet
+-- intro story
+-- logo
+
+-- future
+-- add in levels
+-- stand upgrades
 __gfx__
 cccccccccccccccccccccccccccccccccccccccccccccccc11111111111111111111111111111111000000000000000000000000000000000000000000000000
 ccccccccccccccccccccc999999cccccccccc999999ccccc11111777111111111111177711111111066666600000000000000000000000000000000000000000
