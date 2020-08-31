@@ -320,7 +320,7 @@ function updateday()
 				_ppls.visible=false
 			else
 				_ppls.checked=true
-				if (_ppls.chance+weathervar)>selloption then
+				if (_ppls.chance+weathervar)<selloption then
 					if drinks>0 then
 						drinks-=1
 						drinksold+=1
