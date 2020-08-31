@@ -21,9 +21,9 @@ function _init()
 	ix=5
 	iy=5
 	rx=5
-	ry=75
+	ry=70
 	wx=85
-	wy=75
+	wy=70
 	selx=sx
 	sely=sy+11
 	initinventory()
@@ -182,61 +182,82 @@ function drawgame()
 	rectfill(menux,menuy,menudx,menudy,2)
 	
 	if activemenu==1 then
+		col1=5
+		col2=6
+		col1h=0
+		col2h=6
+		colbtn1=9
+		colbtn2=15
+	elseif activemenu==2 then
+		col2=5
+		col1=6
+		col2h=0
+		col1h=6
+		colbtn1=15
+		colbtn2=9
 	end
 	-- player inventory
 	local funds=" "..money
 	rectfill(ix,iy,ix+50,iy+60,7)
 	print("inventory",ix+5,iy+5,0)
-	print("lEMONS: ",ix+5,iy+13,0)
-	print("sUGAR: ",ix+5,iy+21,0)
-	print("cUPS: ",ix+5,iy+29,0)
+	print("lEMONS: ",ix+5,iy+13,5)
+	print("sUGAR: ",ix+5,iy+21,5)
+	print("cUPS: ",ix+5,iy+29,5)
 	print("money ",ix+5,iy+42,0)
-	print("$ ",ix+5,iy+50,0)
-	print(funds,(ix+5)-(#funds*4-40),iy+50,0)
+	print("$ ",ix+5,iy+50,5)
+	print(funds,(ix+5)-(#funds*4-40),iy+50,5)
 		-- print current inventory
 	for i=1,#inventory do
 		current=" "..inventory[i].owned
-		print(current,(ix+5)-(#current*4-40),iy+5+8*i,0)
+		print(current,(ix+5)-(#current*4-40),iy+5+8*i,5)
 	end
 	
 	-- store
 	rectfill(sx,sy,sx+53,sy+60,7)
 	-- store selector
-	rectfill(selx,sely,selx+53,sely+8,9)
+	rectfill(selx,sely,selx+53,sely+8,colbtn1)
 	-- store list
-	print("store",sx+5,sy+5,0)
-	print("lEMONS: ",sx+5,sy+13,0)
-	print("sUGAR: ",sx+5,sy+21,0)
-	print("cUPS: ",sx+5,sy+29,0)	
-	print("❎ confirm",sx+9,sy+50,9)	
+	print("store",sx+5,sy+5,col1h)
+	print("lEMONS: ",sx+5,sy+13,col1)
+	print("sUGAR: ",sx+5,sy+21,col1)
+	print("cUPS: ",sx+5,sy+29,col1)	
+	print("❎ confirm",sx+8,sy+50,colbtn1)	
 	
 	-- print buy or sell option
 	local bs=" "..option
-	print("⬅️",sx+10,sy+40,0)
-	print("➡️",sx+36,sy+40,0)
-	print(bs,58+((sx/2)-(#bs*2)),sy+40,0)
+	print("⬅️",sx+10,sy+40,col1)
+	print("➡️",sx+36,sy+40,col1)
+	print(bs,58+((sx/2)-(#bs*2)),sy+40,col1)
 	
 	-- print store prices
 	for i=1,#inventory do
 		local expense=" "..inventory[i].cost
-		print("$ ",sx+35,sy+5+8*i,0)
-		print(expense,(sx+10)-(#expense*4-40),sy+5+8*i,0)
+		print("$ ",sx+35,sy+5+8*i,col1)
+		print(expense,(sx+10)-(#expense*4-40),sy+5+8*i,col1)
 	end
 	
 	-- recipe creator
 	rectfill(rx,ry,rx+74,ry+45,7)
-	print("recipe",rx+5,ry+5,0)
-	print("lEMONS: ",rx+5,ry+13,0)
-	print("sUGAR: ",rx+5,ry+21,0)
-	print("pRICE: ",rx+5,ry+29,0)
-	print("❎ to start day",rx+6,ry+38,9)
+	print("recipe",rx+5,ry+5,col2h)
+	print("lEMONS: ",rx+5,ry+13,col2)
+	print("sUGAR: ",rx+5,ry+21,col2)
+	print("pRICE: ",rx+5,ry+29,col2)
+	print("❎ to start day",rx+6,ry+38,colbtn2)
 
 		-- print current recipe
 	for i=1,#inventory do
-		if recipeselector==i then
-			col=9
+		if activemenu==2 then
+			if recipeselector==i then
+				col=9
+			else
+				col=col2
+			end
 		else
-			col=0
+			if recipeselector==i then
+				col=15
+			else
+				col=col2
+			end
 		end
 		local rec=" "..inventory[i].recipe
 		local prc=" "..drinkprice
@@ -247,6 +268,8 @@ function drawgame()
 		else
 		print(prc,(rx+18)-(#prc*4-40),ry+5+8*i,col)
 		end
+		
+		print("🅾️ to switch menu",30,120,0)
 	end
 	
 	--weather forecast
@@ -255,7 +278,7 @@ function drawgame()
 	spr(wspr,wx+10,wy+15,2,2)	
 	local wn
 	wn=weathername
-	print(wn,62+((wx/2)-(#wn*2)),wy+35,0)
+	print(wn,62+((wx/2)-(#wn*2)),wy+35,5)
 end
 
 function updateday()
@@ -354,17 +377,17 @@ function switchmenu()
 	if activemenu==1 then
 		activemenu=2
 		-- move active menu box
-		menux=rx-3
-		menuy=ry-3
-		menudx=rx+77
-		menudy=ry+48
+		menux=rx-2
+		menuy=ry-2
+		menudx=rx+76
+		menudy=ry+47
 	elseif activemenu==2 then
 		activemenu=1
 		-- move active menu box
-		menux=sx-3
-		menuy=sy-3
-		menudx=sx+56
-		menudy=sy+63	
+		menux=sx-2
+		menuy=sy-2
+		menudx=sx+55
+		menudy=sy+62	
 	end
 end
 
@@ -556,6 +579,9 @@ end
 -- future
 -- add in levels
 -- stand upgrades
+-->8
+-- lemon juice
+
 __gfx__
 cccccccccccccccccccccccccccccccccccccccccccccccc11111111111111111111111111111111000000000000009990900000000000000000000000000000
 ccccccccccccccccccccc999999cccccccccc999999ccccc11111777111111111111177711111111066666600000099999900000000000000000000000000000
