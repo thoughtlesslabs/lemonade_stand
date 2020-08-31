@@ -14,7 +14,7 @@ function _init()
 	selector=1
 	recipeselector=1
 	activemenu=2
-	money=1000
+	money=100
 	levelstart=false
 	sx=65
 	sy=5
@@ -320,7 +320,7 @@ function updateday()
 				_ppls.visible=false
 			else
 				_ppls.checked=true
-				if _ppls.chance>selloption then
+				if (_ppls.chance+weathervar)>selloption then
 					if drinks>0 then
 						drinks-=1
 						drinksold+=1
@@ -345,7 +345,7 @@ function drawday()
 	print("pricevar: "..pricevar,10,10,8)
 	print("recipevar: "..recipevar,10,18,8)
 	print("drinkprice: "..drinkprice,10,26,8)
-	print("weather: "..weatherchance,10,34,8)
+	print("weather: "..weathervar,10,34,8)
 	print("selloption: "..selloption,10,42,8)
 	print("people: "..#people,10,50,8)
 	for i=1,#people do
@@ -384,12 +384,24 @@ function purchase(item)
 	if option=="buy" then
 		if money>=choice.cost then
 			money-=choice.cost
-			choice.owned+=1
+			if item==1 then
+				choice.owned+=10
+			elseif item==2 then
+				choice.owned+=5
+			else
+				choice.owned+=1
+			end
 		end
 	elseif option=="sell" then
 		if choice.owned>0 then
 			money+=choice.cost
-			choice.owned-=1
+			if item==1 then
+				choice.owned-=10
+			elseif item==2 then
+				choice.owned-=5
+			else
+				choice.owned-=1
+			end
 		end
 	end
 end
@@ -423,25 +435,25 @@ function weather()
 	if chooseweather==0 then
 		customers=15+randppl
 		weathername="clear"
-		weatherchance=0.10
+		weathervar=5
 	elseif chooseweather==2 then
 		customers=20+randppl
 		weathername="sunny"
-		weatherchance=0.05
+		weathervar=10
 	elseif chooseweather==4 then
 		customers=10+randppl
 		weathername="cloudy"
-		weatherchance=0.15
+		weathervar=0
 	elseif chooseweather==6 then
 		customers=8+randppl
 		weathername="rainy"	
-		weatherchance=0.20
+		weathervar=-5
 	elseif chooseweather==8 then
 		customers=2+randppl
 		weathername="stormy"	
-		weatherchance=0.25
+		weathervar=-10
 	end
-	spawnperson(customers,weatherchance)
+	spawnperson(customers,weathervar)
 end
 
 -- add inventory
@@ -450,17 +462,17 @@ function initinventory()
 	{
 		{name="lemons"
 		,owned=0
-		,cost=50
+		,cost=3
 		,recipe=0
 		},
 		{name="sugar"
 		,owned=0
-		,cost=10
+		,cost=1
 		,recipe=0
 		},
 		{name="cups"
 		,owned=0
-		,cost=5
+		,cost=2
 		,recipe=0
 		}
 	}	
@@ -495,32 +507,19 @@ function makedrinks()
 end
 
 function sellalgo()
-	if drinkprice > 70 then
-		pricevar=-0.2
-	elseif drinkprice > 50 then
-		pricevar=-0.1
-	elseif drinkprice > 30 then
-		pricevar=0
-	elseif drinkprice >15 then
-		pricevar=0.1
-	elseif drinkprice >=5 then
-		pricevar=0.15
-	elseif drinkprice==0 then
-		pricevar=0.5
+	pricevar=weathervar*drinkprice
+	
+	if flr(recipe[1]/recipe[2])==3 then
+		recipevar=3
+	elseif flr(recipe[1]/recipe[2])==2 then
+		recipevar=2
+	else
+		recipevar=1
 	end
 	
-	pricevar=weatherchance*pricevar
-		
-	if recipe[1]>recipe[2] then
-		recipevar=0.15
-	elseif recipe[1]<recipe[2] then			recipevar=0.1
-		recipevar=-0.1
-	elseif recipe[1]==recipe[2] then
-		recipevar=0.05
-	end
-	recipevar=weatherchance*recipevar
-		
-	selloption=1-(weatherchance+pricevar+recipevar)
+	recipevar=weathervar*recipevar
+	
+	selloption=pricevar+recipevar
 end
 -->8
 -- people generator
@@ -541,7 +540,7 @@ function spawnperson(ppl,wc)
 	for i=1,ppl do
 		local direction=flr(rnd(2)+1)
 		local pdx=mid(0.25,rnd()-0.45,1)
-		local _pc=mid(0,(flr(rnd(1*100))/100),1)
+		local _pc=mid(0,(flr(rnd(100)+1)),100)
 		if direction==1 then
 			pdx=-pdx
 			_startx=136
