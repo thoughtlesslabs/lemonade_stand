@@ -85,11 +85,12 @@ function updategame()
 		levelstart=false
 	end
 	if activemenu==1 then
-		if btnp(0) then
-			option="buy"
-		end
-		if btnp(1) then
-			option="sell"
+		if btnp(0) or btnp(1) then
+			if option=="buy" then
+				option="sell"
+			elseif option=="sell" then	
+				option="buy"
+			end
 		end
 		if btnp(2) then
 			if selector>1 then
@@ -154,6 +155,7 @@ function updategame()
 			mode="day"
 			startday=true
 			makedrinks()
+			sellalgo()
 		end
 	end
 	-- change menu
@@ -258,30 +260,6 @@ function updateday()
 	-- sell drinks for cash
 	for i=1,#people do
 		local _ppls=people[i]
-	
-		if drinkprice > 70 then
-			pricevar=-0.2
-		elseif drinkprice > 50 then
-			pricevar=-0.1
-		elseif drinkprice > 30 then
-			pricevar=0
-		elseif drinkprice >15 then
-			pricevar=0.1
-		elseif drinkprice >=5 then
-			pricevar=0.15
-		elseif drinkprice==0 then
-			pricevar=0.5
-		end
-		
-		if recipe[1]>recipe[2] then
-			recipevar=0.15
-		elseif recipe[1]==recipe[2] then
-			recipevar=0.1
-		elseif recipe[1]==recipe[2] then
-			recipevar=0.05
-		end
-		
-		selloption=1-weatherchance-pricevar-recipevar
 		if _ppls.x>128 or _ppls.x<0 then	
 			if _ppls.checked then
 				_ppls.visible=false
@@ -299,6 +277,7 @@ function updateday()
 
 	updatepeople()
 	if #people==0 then
+		mode="balance"
 		resetgame()
 	end
 end
@@ -321,9 +300,16 @@ function drawday()
 end
 
 function updatebalance()
+	if btnp(5) then
+		mode="game"
+		levelstart=true
+		switchmenu()
+		drinks=0
+	end
 end
 
 function drawbalance()
+	rectfill(0,30,128,50,8)
 end
 
 
@@ -418,14 +404,9 @@ function initinventory()
 end
 
 function resetgame()
-	levelstart=true
-	switchmenu()
-	mode="game"
-	drinks=0
 	for i=1,#people do
 		del(people,i)
 	end
-	gamecountdown=400
 end
 
 function makedrinks()
@@ -436,17 +417,42 @@ function makedrinks()
 	
 	recipe={lem.recipe,sug.recipe}
 	for i=1,cps.owned do
-	if lem.recipe>0 and sug.recipe>0 then
-		if (lem.owned-lem.recipe)>=0
-		and (sug.owned-sug.recipe)>=0
-		then
-			lem.owned=lem.owned-lem.recipe
-			sug.owned=sug.owned-sug.recipe
-			cps.owned=cps.owned-1
-			drinks+=1
+		if lem.recipe>0 and sug.recipe>0 then
+			if (lem.owned-lem.recipe)>=0
+			and (sug.owned-sug.recipe)>=0
+			then
+				lem.owned=lem.owned-lem.recipe
+				sug.owned=sug.owned-sug.recipe
+				cps.owned=cps.owned-1
+				drinks+=1
+			end
 		end
 	end
+end
+
+function sellalgo()
+	if drinkprice > 70 then
+		pricevar=-0.2
+	elseif drinkprice > 50 then
+		pricevar=-0.1
+	elseif drinkprice > 30 then
+		pricevar=0
+	elseif drinkprice >15 then
+		pricevar=0.1
+	elseif drinkprice >=5 then
+		pricevar=0.15
+	elseif drinkprice==0 then
+		pricevar=0.5
 	end
+		
+	if recipe[1]>recipe[2] then
+		recipevar=0.15
+	elseif recipe[1]==recipe[2] then			recipevar=0.1
+	elseif recipe[1]==recipe[2] then
+		recipevar=0.05
+	end
+		
+	selloption=1-weatherchance-pricevar-recipevar
 end
 -->8
 -- people generator
