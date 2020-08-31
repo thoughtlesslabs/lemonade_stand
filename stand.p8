@@ -351,27 +351,28 @@ end
 -- weather randomizer
 function weather()
 	-- show forecast sprite
+	local randppl=flr(rnd(5))
 	chooseweather=flr(rnd(9)/2)*2
 	wspr=chooseweather
 		
 	if chooseweather==0 then
-		customers=10
+		customers=15+randppl
 		weathername="clear"
 		weatherchance=0.2
 	elseif chooseweather==2 then
-		customers=10
+		customers=20+randppl
 		weathername="sunny"
 		weatherchance=0.25
 	elseif chooseweather==4 then
-		customers=10	
+		customers=10+randppl
 		weathername="cloudy"
 		weatherchance=0.15
 	elseif chooseweather==6 then
-		customers=10
+		customers=8+randppl
 		weathername="rainy"	
 		weatherchance=0.10
 	elseif chooseweather==8 then
-		customers=10
+		customers=2+randppl
 		weathername="stormy"	
 		weatherchance=0.05
 	end
@@ -447,7 +448,8 @@ function sellalgo()
 		
 	if recipe[1]>recipe[2] then
 		recipevar=0.15
-	elseif recipe[1]==recipe[2] then			recipevar=0.1
+	elseif recipe[1]<recipe[2] then			recipevar=0.1
+		recipevar=-0.1
 	elseif recipe[1]==recipe[2] then
 		recipevar=0.05
 	end
