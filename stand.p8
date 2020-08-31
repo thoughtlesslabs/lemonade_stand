@@ -260,7 +260,7 @@ function updateday()
 	-- sell drinks for cash
 	for i=1,#people do
 		local _ppls=people[i]
-		if _ppls.x>128 or _ppls.x<0 then	
+		if flr(_ppls.x)>50 and flr(_ppls.x)<55 then	
 			if _ppls.checked then
 				_ppls.visible=false
 			else
@@ -473,12 +473,15 @@ end
 function spawnperson(ppl)
 	for i=1,ppl do
 		local direction=flr(rnd(2)+1)
-		local pdx=rnd()+0.25
+		local pdx=rnd()+0.45
 		local _pc=mid(0,(flr(rnd(1*100))/100),1)
 		if direction==1 then
 			pdx=-pdx
+			_startx=128+5+flr(rnd(30))
+		else
+			_startx=0-5-flr(rnd(30))
 		end
-		addpeople(40+rnd(20),pdx,_pc)
+		addpeople(_startx,pdx,_pc)
 	end
 end
 
@@ -486,8 +489,10 @@ function updatepeople()
 	local _p
 	for i=#people,1,-1 do
 		_p=people[i]
+		if _p.x>175 or _p.x<-40 then
 		if not(_p.visible) then
-			del(people,_p)
+				del(people,_p)
+			end
 		else	
 		_p.x+=_p.dx
 		end
