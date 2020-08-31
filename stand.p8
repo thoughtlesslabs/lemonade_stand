@@ -42,6 +42,8 @@ function _update60()
 		updatestart()
 	elseif mode=="game" then
 		updategame()
+	elseif mode=="confirm" then
+		updateconfirm()
 	elseif mode=="day" then
 		updateday()
 	elseif mode=="balance" then
@@ -56,6 +58,8 @@ function _draw()
 		drawstart()
 	elseif mode=="game" then
 		drawgame()
+	elseif mode=="confirm" then
+		drawconfirm()
 	elseif mode=="day" then
 		drawday()
 	elseif mode=="balance" then	
@@ -121,27 +125,27 @@ function updategame()
 		if btnp(0) then
 			if recipeselector==3 then
 				if drinkprice>0 then
-					drinkprice-=0.50
+					drinkprice-=2
 				else
-					drinkprice=5.00
+					drinkprice=10
 				end
 			else
 			if make.recipe>0 then
 				make.recipe-=1
 			else
-				make.recipe=99
+				make.recipe=10
 			end
 		end
 	end
 		if btnp(1) then
 			if recipeselector==3 then
-				if drinkprice<4.59 then
-					drinkprice+=0.50
+				if drinkprice<9 then
+					drinkprice+=2
 				else
-					drinkprice=0.00
+					drinkprice=0
 				end
 			else
-			if make.recipe<99 then
+			if make.recipe<10 then
 				make.recipe+=1
 			else
 				make.recipe=0
@@ -161,11 +165,7 @@ function updategame()
 		
 		-- start day
 		if btnp(5) then
-			mode="day"
-			startday=true
-			makedrinks()
-			sellalgo()
-			moneystart=money
+			mode="confirm"
 		end
 	end
 	-- change menu
@@ -221,7 +221,7 @@ function drawgame()
 	print("lEMONS: ",sx+5,sy+13,col1)
 	print("sUGAR: ",sx+5,sy+21,col1)
 	print("cUPS: ",sx+5,sy+29,col1)	
-	print("❎ confirm",sx+8,sy+50,colbtn1)	
+	print("❎ confirm",sx+7,sy+50,colbtn1)	
 	
 	-- print buy or sell option
 	local bs=" "..option
@@ -261,7 +261,7 @@ function drawgame()
 		end
 		local rec=" "..inventory[i].recipe
 		local prc=" "..drinkprice
-		print("⬅️",rx+36,ry+5+8*i,col)
+		print("⬅️",rx+40,ry+5+8*i,col)
 		print("➡️",rx+60,ry+5+8*i,col)
 		if i<3 then
 		print(rec,(rx+18)-(#rec*4-40),ry+5+8*i,col)
@@ -280,6 +280,28 @@ function drawgame()
 	wn=weathername
 	print(wn,62+((wx/2)-(#wn*2)),wy+35,5)
 end
+
+function updateconfirm()
+	if btnp(5) then
+		mode="day"
+		startday=true
+		makedrinks()
+		sellalgo()
+		moneystart=money
+	end
+	if btnp(4) then
+		mode="game"
+	end
+end
+
+function drawconfirm()
+	local cx=20 cy=40
+	rectfill(cx,cy,cy+70,cy+42,9)
+	print("are you ready\nto hit the streets?",cx+5,cy+5,7)
+	print("❎ start day",cx+5,cy+25,7)
+	print("🅾️ go back",cx+5,cy+33,7)
+end
+
 
 function updateday()
  -- set number of people
@@ -427,19 +449,16 @@ function initinventory()
 	inventory=
 	{
 		{name="lemons"
-		,avail=100
 		,owned=0
 		,cost=50
 		,recipe=0
 		},
 		{name="sugar"
-		,avail=100
 		,owned=0
 		,cost=10
 		,recipe=0
 		},
 		{name="cups"
-		,avail=100
 		,owned=0
 		,cost=5
 		,recipe=0
