@@ -34,7 +34,7 @@ function _init()
 	drinkprice=0
 	drinksold=0
 	option="buy"
-	spawnperson(20)
+	spawnperson(20,0)
 end
 
 function _update60()
@@ -72,7 +72,9 @@ function updatestart()
 		mode="game"
 		levelstart=true
 		switchmenu()
-		del(people,p)
+		for i=#people,1,-1 do
+			del(people,people[i])
+		end
 	end
 end
 
@@ -119,9 +121,9 @@ function updategame()
 		if btnp(0) then
 			if recipeselector==3 then
 				if drinkprice>0 then
-				drinkprice-=5
+					drinkprice-=0.50
 				else
-				drinkprice=95
+					drinkprice=5.00
 				end
 			else
 			if make.recipe>0 then
@@ -133,10 +135,10 @@ function updategame()
 	end
 		if btnp(1) then
 			if recipeselector==3 then
-				if drinkprice<94 then
-				drinkprice+=5
+				if drinkprice<4.59 then
+					drinkprice+=0.50
 				else
-				drinkprice=0
+					drinkprice=0.00
 				end
 			else
 			if make.recipe<99 then
@@ -238,7 +240,7 @@ function drawgame()
 		end
 		local rec=" "..inventory[i].recipe
 		local prc=" "..drinkprice
-		print("⬅️",rx+40,ry+5+8*i,col)
+		print("⬅️",rx+36,ry+5+8*i,col)
 		print("➡️",rx+60,ry+5+8*i,col)
 		if i<3 then
 		print(rec,(rx+18)-(#rec*4-40),ry+5+8*i,col)
@@ -294,18 +296,20 @@ end
 function drawday()
  -- need screen for running calcs
 	cls()
-	drawpeople()
+
 	print("pricevar: "..pricevar,10,10,8)
 	print("recipevar: "..recipevar,10,18,8)
 	print("drinkprice: "..drinkprice,10,26,8)
 	print("weather: "..weatherchance,10,34,8)
 	print("selloption: "..selloption,10,42,8)
+	print("people: "..#people,10,50,8)
 	for i=1,#people do
 		print(people[i].chance,80,5+6*i,8)
 	end
 	for i=1,drinks do
 		spr(10,10,10+9*i)
 	end
+		drawpeople()
 end
 
 function updatebalance()
@@ -315,13 +319,17 @@ function updatebalance()
 		switchmenu()
 		drinks=0
 	end
+	if money<=0 then
+		mode="gameover"
+	end
 end
 
 function drawbalance()
-	rectfill(0,30,128,90,8)
-	print("drinks made: "..drinksmade,5,35,7)
-	print("drinks sold: "..drinksold,5,45,7)
-	print("money earned: "..money-moneystart,5,55,7)
+ local _x=25 _y=20
+	rectfill(_x,_y,_x+75,_y+90,7)
+	print("drinks made: "..drinksmade,_x+5,_y+5,5)
+	print("drinks sold: "..drinksold,_x+5,_y+13,5)
+	print("money earned: "..money-moneystart,_x+5,_y+21,5)
 end
 
 
@@ -370,11 +378,11 @@ function weather()
 	if chooseweather==0 then
 		customers=15+randppl
 		weathername="clear"
-		weatherchance=0.2
+		weatherchance=0.10
 	elseif chooseweather==2 then
 		customers=20+randppl
 		weathername="sunny"
-		weatherchance=0.25
+		weatherchance=0.05
 	elseif chooseweather==4 then
 		customers=10+randppl
 		weathername="cloudy"
@@ -382,13 +390,13 @@ function weather()
 	elseif chooseweather==6 then
 		customers=8+randppl
 		weathername="rainy"	
-		weatherchance=0.10
+		weatherchance=0.20
 	elseif chooseweather==8 then
 		customers=2+randppl
 		weathername="stormy"	
-		weatherchance=0.05
+		weatherchance=0.25
 	end
-	spawnperson(customers)
+	spawnperson(customers,weatherchance)
 end
 
 -- add inventory
@@ -458,6 +466,8 @@ function sellalgo()
 	elseif drinkprice==0 then
 		pricevar=0.5
 	end
+	
+	pricevar=weatherchance*pricevar
 		
 	if recipe[1]>recipe[2] then
 		recipevar=0.15
@@ -466,13 +476,14 @@ function sellalgo()
 	elseif recipe[1]==recipe[2] then
 		recipevar=0.05
 	end
+	recipevar=weatherchance*recipevar
 		
-	selloption=1-weatherchance-pricevar-recipevar
+	selloption=1-(weatherchance+pricevar+recipevar)
 end
 -->8
 -- people generator
 
-function addpeople(_x,_dx,_pchance)
+function addpeople(_x,_dx,_pchance,_spdelay)
 	p={}
 	p.x=_x
 	p.y=90
@@ -480,21 +491,22 @@ function addpeople(_x,_dx,_pchance)
 	p.chance=_pchance
 	p.checked=false
 	p.visible=true
+	p.sdelay=_spdelay
 	add(people,p)
 end
 
-function spawnperson(ppl)
+function spawnperson(ppl,wc)
 	for i=1,ppl do
 		local direction=flr(rnd(2)+1)
 		local pdx=mid(0.25,rnd()-0.45,1)
 		local _pc=mid(0,(flr(rnd(1*100))/100),1)
 		if direction==1 then
 			pdx=-pdx
-			_startx=128+(10+10*i)
+			_startx=136
 		else
-			_startx=0-(10+10*i)
+			_startx=-8
 		end
-		addpeople(_startx,pdx,_pc)
+		addpeople(_startx,pdx,_pc,i*(20+rnd(30)))
 	end
 end
 
@@ -502,10 +514,15 @@ function updatepeople()
 	local _p
 	for i=#people,1,-1 do
 		_p=people[i]
-		if not(_p.visible) then
+		_p.sdelay-=1
+		if _p.x>140 or _p.x<-15 then
+			if not(_p.visible) then
 				del(people,_p)
+			end
 		else	
-		_p.x+=_p.dx
+			if _p.sdelay<0 then
+				_p.x+=_p.dx
+			end
 		end
 	end
 end
@@ -513,12 +530,14 @@ end
 function drawpeople()
 	for i=1,#people do
 	 _p = people[i]
-	 if _p.dx>0 then
-	 	direction=false
-	 else
-	 	direction=true
-	 end
+	 if _p.sdelay<0 then
+		 if _p.dx>0 then
+		 	direction=false
+		 else
+		 	direction=true
+		 end
 		spr(11,_p.x,_p.y,2,2,direction)
+		end
 	end
 end
 -->8
