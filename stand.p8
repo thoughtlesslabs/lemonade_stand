@@ -153,6 +153,7 @@ function updategame()
 		if btnp(5) then
 			mode="day"
 			startday=true
+			makedrinks()
 		end
 	end
 	-- change menu
@@ -253,25 +254,6 @@ function updateday()
 	-- check if cup avail 
 	-- if cups avail then sell
 	-- day ends when customers=0
-	
-	-- make drinks for selling
-	lem=inventory[1]
-	sug=inventory[2]
-	cps=inventory[3]
-	
-	recipe={lem.recipe,sug.recipe}
-	
-	if lem.recipe>0 and sug.recipe>0 then
-	if (lem.owned-lem.recipe)>=0
-	and (sug.owned-sug.recipe)>=0
-	and (cps.owned-1)>=0
-	then
-		lem.owned=lem.owned-lem.recipe
-		sug.owned=sug.owned-sug.recipe
-		cps.owned=cps.owned-1
-		drinks+=1
-	end
-	end
 	
 	-- sell drinks for cash
 	for i=1,#people do
@@ -444,6 +426,27 @@ function resetgame()
 		del(people,i)
 	end
 	gamecountdown=400
+end
+
+function makedrinks()
+	-- make drinks for selling
+	lem=inventory[1]
+	sug=inventory[2]
+	cps=inventory[3]
+	
+	recipe={lem.recipe,sug.recipe}
+	for i=1,cps.owned do
+	if lem.recipe>0 and sug.recipe>0 then
+		if (lem.owned-lem.recipe)>=0
+		and (sug.owned-sug.recipe)>=0
+		then
+			lem.owned=lem.owned-lem.recipe
+			sug.owned=sug.owned-sug.recipe
+			cps.owned=cps.owned-1
+			drinks+=1
+		end
+	end
+	end
 end
 -->8
 -- people generator
