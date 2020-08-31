@@ -83,7 +83,7 @@ function drawstart()
 	fillp(0b1010010100000001.1)
 	rectfill(0,0,128,128,15)
 	spr(32,15,20,13,5)
-	print("press ❎ to start",30,88,9)
+	print("press ❎ to start",30,78,9)
 	drawpeople()
 	print(debug,10,10,8)
 end
