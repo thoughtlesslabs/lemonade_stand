@@ -321,7 +321,6 @@ function updateday()
 				_ppls.visible=false
 			else
 				_ppls.checked=true
-				
 				if (_ppls.chance+weathervar)>selloption then
 					if drinks>0 then
 						drinks-=1
@@ -340,24 +339,46 @@ function updateday()
 		mode="balance"
 		resetgame()
 	end
+	
+	if btnp(4) then
+		for i=1,#people do
+			local _ppls=people[i]
+			if _ppls.checked then
+				_ppls.visible=false
+			else
+				_ppls.checked=true
+				if (_ppls.chance+weathervar)>selloption then
+					if drinks>0 then
+						drinks-=1
+						spawnsale(_ppls.x,_ppls.y)
+						drinksold+=1
+						money+=drinkprice
+					end
+				end
+			end
+		end
+		mode="balance"
+		resetgame()
+	end
 end
 
 function drawday()
  -- need screen for running calcs
 	cls()
-
-	print("pricevar: "..pricevar,10,10,8)
-	print("recipevar: "..recipevar,10,18,8)
-	print("drinkprice: "..drinkprice,10,26,8)
-	print("weather: "..weathervar,10,34,8)
-	print("selloption: "..selloption,10,42,8)
-	print("people: "..#people,10,50,8)
-	for i=1,#people do
-		print(people[i].chance,80,5+6*i,8)
-	end
+	-- show drinks on screen
 	for i=1,drinks do
-		spr(10,10,10+9*i)
+		spr(10,5+flr((i-1)/8)*9,((i-1)%8)*8)
 	end
+--	for i=1,#people do
+--	print("p: "..people[i].chance,100,6*i,8)
+--	end
+--	print("pricevar: "..pricevar,40,10,8)
+--	print("drink price: "..drinkprice,40,18,8)
+--	print("recipevar: "..recipevar,40,26,8)
+--	print("rvar: "..rvar,40,34,8)
+--	print("weathervar: "..weathervar,40,42,8)
+--	print("weathervar: "..weathervar,40,50,8)
+--	print("selloption: "..selloption,40,58,8)
 	drawpeople()
 	drawsale()
 end
@@ -379,6 +400,7 @@ function drawbalance()
 	rectfill(_x,_y,_x+75,_y+90,7)
 	print("drinks made: "..drinksmade,_x+5,_y+5,5)
 	print("drinks sold: "..drinksold,_x+5,_y+13,5)
+	line(_x,_y,_x+60,_y,8)
 	print("money earned: "..money-moneystart,_x+5,_y+21,5)
 end
 
@@ -570,7 +592,7 @@ function spawnperson(ppl,wc)
 		else
 			_startx=-8
 		end
-		addpeople(_startx,pdx,_pc,i*(20+rnd(30)),_sc,_lc,_cc)
+		addpeople(_startx,pdx,_pc,i*(30+rnd(30)),_sc,_lc,_cc)
 	end
 end
 
