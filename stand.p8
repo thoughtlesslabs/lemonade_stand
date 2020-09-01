@@ -407,22 +407,22 @@ function updatebalance()
 end
 
 function drawbalance()
- local _x=25 _y=18
+ local _x=25 _y=15
  local dm=" "..drinksmade
  local ds=" "..drinksold
-	rectfill(_x,_y,_x+78,_y+90,7)
-	print("-- day "..daynum.." sales --",_x+5,_y+5,9)
-	print("dRINKS MADE: ",_x+7,_y+16,5)
-	print("dRINKS SOLD: ",_x+7,_y+24,5)
-	print("pROFIT: ",_x+7,_y+40,5)
-	print("$",_x+51,_y+40,5)
-	print(dm,(_x+26)-(#dm*4-40),_y+16,5)
-	print(ds,(_x+26)-(#ds*4-40),_y+24,5)
-	line(_x+5,_y+33,_x+70,_y+33,6)
+	rectfill(_x,_y,_x+80,_y+95,7)
+	print("-- day "..daynum.." sales --",_x+7,_y+5,9)
+	print("dRINKS MADE: ",_x+10,_y+16,5)
+	print("dRINKS SOLD: ",_x+10,_y+24,5)
+	print("pROFIT: ",_x+10,_y+40,5)
+	print("$",_x+54,_y+40,5)
+	print(dm,(_x+29)-(#dm*4-40),_y+16,5)
+	print(ds,(_x+29)-(#ds*4-40),_y+24,5)
+	line(_x+7,_y+33,_x+72,_y+33,6)
 	local pro=" "..profit
-	print(pro,(_x+26)-(#pro*4-40),_y+40,profitcol)
+	print(pro,(_x+29)-(#pro*4-40),_y+40,profitcol)
 	print("cOMMENTS:",_x+7,_y+55,5)
-	print(rcom.."\n\n"..pcom,_x+7,_y+63,5)
+	print(rcom.."\n\n"..pcom,_x+10,_y+63,5)
 end
 
 function updategameover()
