@@ -37,6 +37,9 @@ function _init()
 	option="buy"
 	spawnperson(20,0)
 	profit=0
+	daynum=0
+	rcom="test"
+	pcom="test2"
 end
 
 function _update60()
@@ -337,8 +340,8 @@ function updateday()
 	updatepeople()
 	updatesale()
 	if #people==0 then
+		daynum+=1
 		mode="balance"
-		resetgame()
 	end
 	
 	if btnp(4) then
@@ -358,8 +361,8 @@ function updateday()
 				end
 			end
 		end
+		daynum+=1
 		mode="balance"
-		resetgame()
 	end
 end
 
@@ -373,7 +376,7 @@ function drawday()
 --	for i=1,#people do
 --	print("p: "..people[i].chance,100,6*i,8)
 --	end
---	print("pricevar: "..pricevar,40,10,8)
+	print("pricevar: "..pricevar,40,10,8)
 --	print("drink price: "..drinkprice,40,18,8)
 --	print("recipevar: "..recipevar,40,26,8)
 --	print("rvar: "..rvar,40,34,8)
@@ -385,6 +388,7 @@ function drawday()
 end
 
 function updatebalance()
+	helpfulhint()
 	profit=money-moneystart
 	if profit>0 then
 		profitcol=3
@@ -395,7 +399,7 @@ function updatebalance()
 		mode="game"
 		levelstart=true
 		switchmenu()
-		drinks=0
+		resetgame()
 	end
 	if money<=0 then
 		mode="gameover"
@@ -407,15 +411,18 @@ function drawbalance()
  local dm=" "..drinksmade
  local ds=" "..drinksold
 	rectfill(_x,_y,_x+75,_y+90,7)
-	print("drinks made: ",_x+7,_y+5,5)
-	print("drinks sold: ",_x+7,_y+13,5)
-	print("profit: ",_x+7,_y+29,5)
-	print("$",_x+51,_y+29,5)
-	print(dm,(_x+26)-(#dm*4-40),_y+5,5)
-	print(ds,(_x+26)-(#ds*4-40),_y+13,5)
-	line(_x+5,_y+24,_x+70,_y+24,6)
+	print("-- day "..daynum.." sales --",_x+5,_y+5,9)
+	print("dRINKS MADE: ",_x+7,_y+16,5)
+	print("dRINKS SOLD: ",_x+7,_y+24,5)
+	print("pROFIT: ",_x+7,_y+40,5)
+	print("$",_x+51,_y+40,5)
+	print(dm,(_x+26)-(#dm*4-40),_y+16,5)
+	print(ds,(_x+26)-(#ds*4-40),_y+24,5)
+	line(_x+5,_y+33,_x+70,_y+33,6)
 	local pro=" "..profit
-	print(pro,(_x+26)-(#pro*4-40),_y+29,profitcol)
+	print(pro,(_x+26)-(#pro*4-40),_y+40,profitcol)
+	print("cOMMENTS:",_x+7,_y+55,5)
+	print(rcom.."\n\n"..pcom,_x+7,_y+63,5)
 end
 
 function updategameover()
@@ -529,6 +536,8 @@ function resetgame()
 	for i=1,#people do
 		del(people,i)
 	end
+	drinksold=0
+	drinks=0
 end
 
 function makedrinks()
@@ -564,8 +573,10 @@ function sellalgo()
 		rvar=3
 	elseif flr(recipe[1]/recipe[2])==1 then
 		rvar=5
-	else
+	elseif flr(recipe[1]/recipe[2])<1 and flr(recipe[1]/recipe[2])>0 then
 		rvar=7
+	else
+		rvar=10
 	end
 	
 	--recipe score times weather
@@ -573,6 +584,30 @@ function sellalgo()
 	
 	--set sell option
 	selloption=100-pricevar-recipevar
+end
+
+function helpfulhint()
+	if rvar==1 then
+		rcom="dELICIOUS!"
+	elseif rvar==3 then
+		rcom="a LITTLE SWEET"
+	elseif rvar==5 then
+		rcom="nOT SOUR ENOUGH"
+	elseif rvar==7 then
+		rcom="wAY TOO SWEET"
+	else
+		rcom="wHERE WERE THE\nDRINKS?"
+	end
+	
+	if pricevar>=20 then
+		pcom="lITTLE EXPENSIVE"
+	elseif pricevar>10 then
+		pcom="pERFECTLY PRICED"
+	elseif pricevar > 0 then
+		pcom="i'D PAY MORE"
+	else
+		pcom="I LOVE FREEBIES"
+	end
 end
 -->8
 -- people generator
