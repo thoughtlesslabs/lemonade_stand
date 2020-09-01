@@ -364,6 +364,7 @@ function updateday()
 		daynum+=1
 		mode="balance"
 	end
+	helpfulhint()
 end
 
 function drawday()
@@ -377,6 +378,7 @@ function drawday()
 --	print("p: "..people[i].chance,100,6*i,8)
 --	end
 	print("pricevar: "..pricevar,40,10,8)
+	print("rvar: "..rvar,40,18,8)
 --	print("drink price: "..drinkprice,40,18,8)
 --	print("recipevar: "..recipevar,40,26,8)
 --	print("rvar: "..rvar,40,34,8)
@@ -388,7 +390,6 @@ function drawday()
 end
 
 function updatebalance()
-	helpfulhint()
 	profit=money-moneystart
 	if profit>0 then
 		profitcol=3
@@ -396,10 +397,10 @@ function updatebalance()
 		profitcol=5
 	end
 	if btnp(5) then
+		resetgame()
 		mode="game"
 		levelstart=true
 		switchmenu()
-		resetgame()
 	end
 	if money<=0 then
 		mode="gameover"
@@ -410,7 +411,7 @@ function drawbalance()
  local _x=25 _y=15
  local dm=" "..drinksmade
  local ds=" "..drinksold
-	rectfill(_x,_y,_x+80,_y+95,7)
+	rectfill(_x,_y,_x+83,_y+95,7)
 	print("-- day "..daynum.." sales --",_x+7,_y+5,9)
 	print("dRINKS MADE: ",_x+10,_y+16,5)
 	print("dRINKS SOLD: ",_x+10,_y+24,5)
@@ -533,8 +534,11 @@ function initinventory()
 end
 
 function resetgame()
-	for i=1,#people do
-		del(people,i)
+	for i=#people,1,-1 do
+		del(people,people[i])
+	end
+	for i=#sale,1,-1 do
+		del(sale,sale[i])
 	end
 	drinksold=0
 	drinks=0
@@ -575,6 +579,8 @@ function sellalgo()
 		rvar=5
 	elseif flr(recipe[1]/recipe[2])<1 and flr(recipe[1]/recipe[2])>0 then
 		rvar=7
+	elseif flr(recipe[1]/recipe[2])>3 then
+		rvar=9
 	else
 		rvar=10
 	end
@@ -583,7 +589,11 @@ function sellalgo()
 	recipevar=weathervar*rvar
 	
 	--set sell option
-	selloption=100-pricevar-recipevar
+	if drinkprice==0 then
+		selloption=0
+	else
+		selloption=100-pricevar-recipevar
+	end
 end
 
 function helpfulhint()
@@ -595,13 +605,15 @@ function helpfulhint()
 		rcom="- nOT SOUR ENOUGH"
 	elseif rvar==7 then
 		rcom="- wAY TOO SWEET"
-	else
+	elseif rvar==9 then
+		rcom="- wAY TOO SOUR"
+	elseif rvar==10 then
 		rcom="- wHERE WERE THE\nDRINKS?"
 	end
 	
 	if pricevar>=20 then
-		pcom="- lITTLE EXPENSIVE"
-	elseif pricevar>10 then
+		pcom="- tOO EXPENSIVE"
+	elseif pricevar>=10 then
 		pcom="- pERFECTLY PRICED"
 	elseif pricevar > 0 then
 		pcom="- i'D PAY MORE"
@@ -717,8 +729,6 @@ function updatesale()
 		_s.timer-=1
 		if _s.timer>0 then
 			_s.y+=_s.dy
-		else
-			_s.v=false
 		end
 	end
 end		
