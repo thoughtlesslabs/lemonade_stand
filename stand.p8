@@ -407,10 +407,10 @@ function updatebalance()
 end
 
 function drawbalance()
- local _x=25 _y=20
+ local _x=25 _y=18
  local dm=" "..drinksmade
  local ds=" "..drinksold
-	rectfill(_x,_y,_x+75,_y+90,7)
+	rectfill(_x,_y,_x+78,_y+90,7)
 	print("-- day "..daynum.." sales --",_x+5,_y+5,9)
 	print("dRINKS MADE: ",_x+7,_y+16,5)
 	print("dRINKS SOLD: ",_x+7,_y+24,5)
@@ -588,25 +588,29 @@ end
 
 function helpfulhint()
 	if rvar==1 then
-		rcom="dELICIOUS!"
+		rcom="- dELICIOUS!"
 	elseif rvar==3 then
-		rcom="a LITTLE SWEET"
+		rcom="- a LITTLE SWEET"
 	elseif rvar==5 then
-		rcom="nOT SOUR ENOUGH"
+		rcom="- nOT SOUR ENOUGH"
 	elseif rvar==7 then
-		rcom="wAY TOO SWEET"
+		rcom="- wAY TOO SWEET"
 	else
-		rcom="wHERE WERE THE\nDRINKS?"
+		rcom="- wHERE WERE THE\nDRINKS?"
 	end
 	
 	if pricevar>=20 then
-		pcom="lITTLE EXPENSIVE"
+		pcom="- lITTLE EXPENSIVE"
 	elseif pricevar>10 then
-		pcom="pERFECTLY PRICED"
+		pcom="- pERFECTLY PRICED"
 	elseif pricevar > 0 then
-		pcom="i'D PAY MORE"
+		pcom="- i'D PAY MORE"
 	else
-		pcom="I LOVE FREEBIES"
+		if rvar==10 then
+			pcom=" "
+		else
+			pcom="- I LOVE FREEBIES"
+		end
 	end
 end
 -->8
