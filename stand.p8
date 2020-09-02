@@ -41,9 +41,17 @@ function _init()
 	daynum=0
 	rcom="test"
 	pcom="test2"
+		--particle patterns
+	parttimer=0
+	partrow=0
+	
+	startparts()
 end
 
 function _update60()
+	updatepeople()
+	updatejuice()	
+	updatesale()
 	if mode=="start" then
 		updatestart()
 	elseif mode=="game" then
@@ -76,24 +84,20 @@ function _draw()
 end
 
 function updatestart()
-	updatepeople()
-			
+	-- raining particles
+	parttimer=parttimer+1
+	spawnbgparts(true,parttimer)
 	if btnp(5) then
 		mode="game"
 		levelstart=true
 		switchmenu()
-		for i=#people,1,-1 do
-			del(people,people[i])
-		end
+		resetgame()
 	end
 end
 
 function drawstart()
-	cls(10)
-	
-	
-	fillp(0b1010010100000001.1)
-	rectfill(0,0,128,128,15)
+	cls(12)
+	drawjuice()
 	spr(32,15,20,13,5)
 	print("press ❎ to start",30,78,9)
 	drawpeople()
@@ -339,9 +343,6 @@ function updateday()
 			end
 		end
 	end		
-
-	updatepeople()
-	updatesale()
 	if #people==0 then
 		daynum+=1
 		mode="balance"
@@ -709,27 +710,40 @@ end
 -->8
 -- lemon juice
 
-function addjuice(_x,_y,_dx,_dy)
+function addjuice(_sprite,_x,_y,_dx,_dy)
 	j={}
 	j.x=_x
 	j.y=_y
 	j.dx=_dx
 	j.dy=_dy
+	j.sp=_sprite
 	add(parts,j)
 end
 
-function squeeze()
+-- generate juice
+function squeeze(_x,_y)
+	
 end
 
+-- move juice particles
 function updatejuice()
+	for i=#parts,1,-1 do
+		local _juice=parts[i]
+		_juice.x+=_juice.dx
+		_juice.y+=_juice.dy
+	end
 end
 
+
+-- add juice particles
 function drawjuice()
+	for i=1,#parts do
+		local _juice=parts[i]
+		spr(_juice.sp,_juice.x,_juice.y,3,2)
+	end
 end
 
-
-
-
+-- show dollar sign for purchase
 function spawnsale(_x,_y)
 	sa={}
 	sa.timer=40
@@ -740,6 +754,7 @@ function spawnsale(_x,_y)
 	add(sale,sa)
 end
 
+-- move $ sign
 function updatesale()
 	for i=#sale,1,-1 do
 		local _s=sale[i]
@@ -750,6 +765,7 @@ function updatesale()
 	end
 end		
 
+-- draw $ sign
 function drawsale()
 	for i=1,#sale do
 		local _s=sale[i]
@@ -764,6 +780,40 @@ function drawsale()
 	end
 end
 
+-- lemons on start
+function startparts()
+	for i=0,400 do
+		spawnbgparts(false,i)
+	end
+end
+
+function spawnbgparts(_top,_t)
+	if _t%30==0 then
+		if partrow==0 then
+			partrow=1
+		else
+			partrow=0
+		end
+		for i=0,8 do
+			if _top then
+				_y=-8
+			else
+				_y=-8 + 0.4*_t
+			end
+			if (i+partrow)%2==0 then
+				addjuice(13,i*16-4,_y-4,0,0.5)
+		end
+		end
+	end
+		
+	if _t%15==0 then
+		if _top then
+			_y=-8
+		else
+			_y=-8 + 0.8*_t
+		end
+	end
+end
 __gfx__
 cccccccccccccccccccccccccccccccccccccccccccccccc11111111111111111111111111111111000000003333309090903333000000000000000000000000
 ccccccccccccccccccccc999999cccccccccc999999ccccc11111777111111111111177711111111066666603333090999903333000000000000000000000000
