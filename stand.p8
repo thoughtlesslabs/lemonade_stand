@@ -534,12 +534,8 @@ function initinventory()
 end
 
 function resetgame()
-	for i=#people,1,-1 do
-		del(people,people[i])
-	end
-	for i=#sale,1,-1 do
-		del(sale,sale[i])
-	end
+	sale={}
+	people={}
 	drinksold=0
 	drinks=0
 end
@@ -567,8 +563,7 @@ function makedrinks()
 end
 
 function sellalgo()
-	-- weather times drinkprice
-	pricevar=weathervar*drinkprice
+	
 	
 	-- recipe gets a score
 	if flr(recipe[1]/recipe[2])==3 then
@@ -597,7 +592,9 @@ function sellalgo()
 end
 
 function helpfulhint()
-	if rvar==1 then
+	if drinksmade==0 then
+		rcom="- wHERE WERE THE\nDRINKS?"
+	elseif rvar==1 then
 		rcom="- dELICIOUS!"
 	elseif rvar==3 then
 		rcom="- a LITTLE SWEET"
@@ -607,22 +604,18 @@ function helpfulhint()
 		rcom="- wAY TOO SWEET"
 	elseif rvar==9 then
 		rcom="- wAY TOO SOUR"
-	elseif rvar==10 then
-		rcom="- wHERE WERE THE\nDRINKS?"
 	end
 	
-	if pricevar>=20 then
+	if drinksmade==0 then
+		pcom=" "
+	elseif pricevar>=20 then
 		pcom="- tOO EXPENSIVE"
 	elseif pricevar>=10 then
 		pcom="- pERFECTLY PRICED"
 	elseif pricevar > 0 then
 		pcom="- i'D PAY MORE"
 	else
-		if rvar==10 then
-			pcom=" "
-		else
-			pcom="- I LOVE FREEBIES"
-		end
+		pcom="- I LOVE FREEBIES"
 	end
 end
 -->8
