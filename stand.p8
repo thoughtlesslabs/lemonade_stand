@@ -29,6 +29,7 @@ function _init()
 	initinventory()
 	people={}
 	sale={}
+	parts={}
 	customers=0
 	weathername="none"
 	drinks=0
@@ -89,6 +90,8 @@ end
 
 function drawstart()
 	cls(10)
+	
+	
 	fillp(0b1010010100000001.1)
 	rectfill(0,0,128,128,15)
 	spr(32,15,20,13,5)
@@ -705,6 +708,27 @@ end
 -- stand upgrades
 -->8
 -- lemon juice
+
+function addjuice(_x,_y,_dx,_dy)
+	j={}
+	j.x=_x
+	j.y=_y
+	j.dx=_dx
+	j.dy=_dy
+	add(parts,j)
+end
+
+function squeeze()
+end
+
+function updatejuice()
+end
+
+function drawjuice()
+end
+
+
+
 
 function spawnsale(_x,_y)
 	sa={}
