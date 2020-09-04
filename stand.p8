@@ -105,13 +105,15 @@ end
 function drawstart()
 	cls(12)
 	drawjuice()
+	
 	spr(32,15,20,13,5)
 	print("press ❎ to start",31,70,7)
 	print("press ❎ to start",30,70,5)
 	map(0,0,0,48)
+	rectfill(0,100,128,103,3)
 	spr(112,45,78,3,4)
+
 	drawpeople()
-	print(debug,10,10,8)
 end
 
 function updategame()
@@ -198,8 +200,6 @@ end
 
 function drawgame()
 	cls(10)
-	fillp()
-	
 	-- menu selection indicator
 	rectfill(menux,menuy,menudx,menudy,2)
 	
@@ -306,6 +306,7 @@ end
 function updateconfirm()
 	if btnp(5) then
 		mode="day"
+		spawnperson(customers)
 		startday=true
 		makedrinks()
 		sellalgo()
@@ -318,6 +319,7 @@ end
 
 function drawconfirm()
 	local cx=20 cy=40
+	rectfill(cx-2,cy-2,cy+72,cy+44,5)
 	rectfill(cx,cy,cy+70,cy+42,9)
 	print("are you ready\nto hit the streets?",cx+5,cy+5,7)
 	print("❎ start day",cx+5,cy+25,7)
@@ -342,7 +344,7 @@ function updateday()
 				_ppls.visible=false
 			else
 				_ppls.checked=true
-				if (_ppls.chance+weathervar)>selloption then
+				if _ppls.chance>selloption then
 					if drinks>0 then
 						drinks-=1
 						spawnsale(_ppls.x,_ppls.y)
@@ -365,7 +367,7 @@ function updateday()
 				_ppls.visible=false
 			else
 				_ppls.checked=true
-				if _ppls.chance>selloption then
+				if (_ppls.chance)+(weathervar*2)>selloption then
 					if drinks>0 then
 						drinks-=1
 						spawnsale(_ppls.x,_ppls.y)
@@ -387,6 +389,7 @@ function drawday()
 	
 	-- draw stand and road
 	map(0,0,0,48)
+	rectfill(0,100,128,103,3)
 	spr(112,45,78,3,4)
 	
 	-- show drinks on screen
@@ -396,10 +399,9 @@ function drawday()
 	for i=1,#people do
 	print("p: "..people[i].chance,100,6*i,8)
 	end
---	print("pricevar: "..pricevar,40,30,8)
---	print("recipevar: "..recipevar,40,40,8)
---	print("weathervar: "..weathervar,40,50,8)
---	print("selloption: "..selloption,40,58,8)
+	print("pricevar: "..pricevar,40,30,8)
+	print("recipevar: "..recipevar,40,40,8)
+	print("selloption: "..selloption,40,58,8)
 	drawpeople()
 	drawsale()
 	print("🅾️ to end day",40,118,7)
@@ -434,7 +436,7 @@ function drawbalance()
 	print("dRINKS MADE: ",_x+10,_y+16,5)
 	print("dRINKS SOLD: ",_x+10,_y+24,5)
 	print("pROFIT: ",_x+10,_y+40,5)
-	print("$",_x+54,_y+40,5)
+	print("$",_x+53,_y+40,5)
 	print(dm,(_x+29)-(#dm*4-40),_y+16,5)
 	print(ds,(_x+29)-(#ds*4-40),_y+24,5)
 	line(_x+7,_y+33,_x+72,_y+33,6)
@@ -504,35 +506,35 @@ function weather()
 	-- show forecast sprite
 	local randppl=flr(rnd(5))
 	chooseweather=flr(rnd(9)/2)*2
+--	chooseweather=2
 	wspr=chooseweather
 		
 	if chooseweather==0 then
-		customers=15+randppl
+		customers=30+randppl
 		weathername="clear"
+		weatherbg=12
 		weathervar=4
-		weatherbg=12
 	elseif chooseweather==2 then
-		customers=20+randppl
+		customers=40+randppl
 		weathername="sunny"
-		weathervar=5
 		weatherbg=12
+		weathervar=5
 	elseif chooseweather==4 then
-		customers=10+randppl
+		customers=20+randppl
 		weathername="cloudy"
-		weathervar=3
 		weatherbg=13
+		weathervar=3
 	elseif chooseweather==6 then
-		customers=8+randppl
+		customers=10+randppl
 		weathername="rainy"	
-		weathervar=2
 		weatherbg=1
+		weathervar=2
 	elseif chooseweather==8 then
-		customers=2+randppl
+		customers=5+randppl
 		weathername="stormy"	
-		weathervar=1
 		weatherbg=0
+		weathervar=1
 	end
-	spawnperson(customers)
 end
 
 -- add inventory
@@ -541,17 +543,17 @@ function initinventory()
 	{
 		{name="lemons"
 		,owned=0
-		,cost=3
+		,cost=6
 		,recipe=0
 		},
 		{name="sugar"
 		,owned=0
-		,cost=1
+		,cost=2
 		,recipe=0
 		},
 		{name="cups"
 		,owned=0
-		,cost=2
+		,cost=3
 		,recipe=0
 		}
 	}	
@@ -588,21 +590,52 @@ end
 
 function sellalgo()
 
-	if drinkprice==10 then
-		pvar=1
-	elseif drinkprice==8 then
-		pvar=2
-	elseif drinkprice==6 then
-		pvar=5
-	elseif drinkprice==4 then
-		pvar=3
-	elseif drinkprice==2 then
-		pvar=4
-	elseif drinkprice==0 then
-		pvar=0
-	end
 	
-	pricevar=pvar*weathervar
+	if weathername=="sunny" or weathername=="clear" then
+		if drinkprice==10 then
+			pricevar=10*2
+		elseif drinkprice==8 then
+			pricevar=10*3
+		elseif drinkprice==6 then
+			pricevar=10*5
+		else 
+			pricevar=10*6
+		end
+	elseif weathername=="cloudy" then
+		if drinkprice==10 then
+			pricevar=6*2
+		elseif drinkprice==8 then
+			pricevar=8*3
+		elseif drinkprice==6 then
+			pricevar=10*5
+		elseif drinkprice<6 then
+			pricevar=10*6
+		end
+	elseif weathername=="rainy" then
+		if drinkprice==10 then
+			pricevar=4*2
+		elseif drinkprice==8 then
+			pricevar=6*3
+		elseif drinkprice==6 then
+			pricevar=8*5
+		elseif drinkprice==4 then
+			pricevar=8*6
+		else
+			pricevar=10*6	
+		end
+	elseif weathername=="stormy" then
+		if drinkprice==10 then
+			pricevar=2*2
+		elseif drinkprice==8 then
+			pricevar=4*3
+		elseif drinkprice==6 then
+			pricevar=6*5
+		elseif drinkprice==4 then
+			pricevar=8*6
+		else
+			pricevar=10*6
+		end
+	end
 	
 	-- recipe gets a score
 	if flr(recipe[1]/recipe[2])==3 then
@@ -647,12 +680,12 @@ function helpfulhint()
 	
 	if drinksmade==0 or drinksold==0 then
 		pcom=" "
-	elseif pricevar>=20 then
-		pcom="- pERFECTLY PRICED"
-	elseif pricevar>=10 then
-		pcom="- tOO EXPENSIVE"
-	elseif pricevar > 0 then
+	elseif pricevar>=60 then
 		pcom="- i'D PAY MORE"
+	elseif pricevar==50 then
+		pcom="- pERFECTLY PRICED"
+	elseif pricevar<50 then
+		pcom="- tOO EXPENSIVE"
 	else
 		pcom="- I LOVE FREEBIES"
 	end
