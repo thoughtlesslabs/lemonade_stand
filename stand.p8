@@ -45,6 +45,7 @@ function _init()
 	partrow=0
 	startpeople=true
 	startparts()
+	lightningtimer=100
 end
 
 function _update60()
@@ -335,6 +336,11 @@ function updateday()
 	-- check if cup avail 
 	-- if cups avail then sell
 	-- day ends when customers=0
+	lightningtimer-=1
+	if lightningtimer<-1 then
+		lightingtimer=100
+	end
+	addweather(chooseweather)
 	
 	-- sell drinks for cash
 	for i=1,#people do
@@ -386,7 +392,6 @@ end
 function drawday()
  -- need screen for running calcs
 	cls(weatherbg)
-	
 	-- draw stand and road
 	map(0,0,0,48)
 	rectfill(0,100,128,103,3)
@@ -405,6 +410,7 @@ function drawday()
 	drawpeople()
 	drawsale()
 	print("🅾️ to end day",40,118,7)
+	drawjuice()
 end
 
 function updatebalance()
@@ -506,8 +512,8 @@ function weather()
 	-- show forecast sprite
 	local randppl=flr(rnd(5))
 	chooseweather=flr(rnd(9)/2)*2
---	chooseweather=2
-	wspr=chooseweather
+	chooseweather=6
+--	wspr=chooseweather
 		
 	if chooseweather==0 then
 		customers=30+randppl
@@ -787,13 +793,16 @@ end
 -->8
 -- lemon juice
 
-function addjuice(_sprite,_x,_y,_dx,_dy)
+function addjuice(_sprite,_x,_y,_dx,_dy,_maxage,_type)
 	j={}
 	j.x=_x
 	j.y=_y
 	j.dx=_dx
 	j.dy=_dy
+	j.age=0
+	j.maxage=_maxage
 	j.sp=_sprite
+	j.tpe=_type
 	add(parts,j)
 end
 
@@ -802,12 +811,30 @@ function squeeze(_x,_y)
 	
 end
 
+function addweather(_wth)
+	if _wth==6 then
+		addjuice(12,-50+rnd(170),-5,0.5,1,150,0)
+	elseif _wth==8 then
+		for i=1,10 do
+		addjuice(6,-50+rnd(170),-5,0.5,2,150,0)
+	end
+	end
+end
+
 -- move juice particles
 function updatejuice()
 	for i=#parts,1,-1 do
 		local _juice=parts[i]
+		_juice.age+=1
+		if _juice.tpe==1 and mode!="start" then
+				del(parts,_juice)
+		end
+		if _juice.age>_juice.maxage and mode!="start" then
+			del(parts,_juice)
+		else
 		_juice.x+=_juice.dx
 		_juice.y+=_juice.dy
+		end
 	end
 end
 
@@ -816,7 +843,11 @@ end
 function drawjuice()
 	for i=1,#parts do
 		local _juice=parts[i]
-		spr(_juice.sp,_juice.x,_juice.y,3,2)
+		if _juice.tpe==1 then
+			spr(_juice.sp,_juice.x,_juice.y,3,2)
+		elseif _juice.tpe==0 then
+			pset(_juice.x,_juice.y,_juice.sp)
+		end	
 	end
 end
 
@@ -869,22 +900,24 @@ function startparts()
 end
 
 function spawnbgparts(_top,_t)
-	if _t%30==0 then
-		if partrow==0 then
-			partrow=1
-		else
-			partrow=0
-		end
-		for i=0,8 do
-			if _top then
-				_y=-8
-				_x=-14
+	if mode=="start" then
+		if _t%30==0 then
+			if partrow==0 then
+				partrow=1
 			else
-				_y=-8 + 0.4*_t
-				_x=0
+				partrow=0
 			end
-			if (i+partrow)%2==0 then
-				addjuice(117,_x+i*16-4,_y-4,0,0.5)
+			for i=0,8 do
+				if _top then
+					_y=-8
+					_x=-14
+				else
+					_y=-8 + 0.4*_t
+					_x=0
+				end
+				if (i+partrow)%2==0 then
+					addjuice(117,_x+i*16-4,_y-4,0,0.5,0,1)
+				end
 			end
 		end
 	end
