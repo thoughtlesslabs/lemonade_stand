@@ -773,19 +773,17 @@ end
 -->8
 -- to do list
 
--- adjust algo
--- create balance sheet page
---			- overview of day
---			- money earned
---			- product wasted
--- 		- give customer feedback
---     on recipe ie too sweet
 -- intro story
--- logo
+-- save functionality
+-- weather during day
+-- more people versions
+-- phase transitions
+-- player charcter at stand
 
 -- future
 -- add in levels
 -- stand upgrades
+-- 
 -->8
 -- lemon juice
 
