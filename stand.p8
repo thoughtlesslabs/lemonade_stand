@@ -36,7 +36,7 @@ function _init()
 	drinkprice=0
 	drinksold=0
 	option="buy"
-	profit=0
+	revenue=0
 	daynum=0
 	rcom="test"
 	pcom="test2"
@@ -157,7 +157,7 @@ function updategame()
 			if make.recipe>0 then
 				make.recipe-=1
 			else
-				make.recipe=10
+				make.recipe=5
 			end
 		end
 	end
@@ -169,7 +169,7 @@ function updategame()
 					drinkprice=0
 				end
 			else
-			if make.recipe<10 then
+			if make.recipe<5 then
 				make.recipe+=1
 			else
 				make.recipe=0
@@ -396,12 +396,12 @@ function drawday()
 	for i=1,drinks do
 		spr(10,5+flr((i-1)/8)*9,((i-1)%8)*8)
 	end
-	for i=1,#people do
-	print("p: "..people[i].chance,100,6*i,8)
-	end
-	print("pricevar: "..pricevar,40,30,8)
-	print("recipevar: "..recipevar,40,40,8)
-	print("selloption: "..selloption,40,58,8)
+--	for i=1,#people do
+--	print("p: "..people[i].chance,100,6*i,8)
+--	end
+--	print("pricevar: "..pricevar,40,30,8)
+--	print("recipevar: "..recipevar,40,40,8)
+--	print("selloption: "..selloption,40,58,8)
 	drawpeople()
 	drawsale()
 	print("🅾️ to end day",40,118,7)
@@ -409,11 +409,11 @@ end
 
 function updatebalance()
 	balanceactive=true
-	profit=money-moneystart
-	if profit>0 then
-		profitcol=3
+	revenue=money-moneystart
+	if revenue>0 then
+		revcol=3
 	else
-		profitcol=5
+		revcol=5
 	end
 	if btnp(5) then
 		resetgame()
@@ -435,13 +435,13 @@ function drawbalance()
 	print("-- day "..daynum.." sales --",_x+7,_y+5,9)
 	print("dRINKS MADE: ",_x+10,_y+16,5)
 	print("dRINKS SOLD: ",_x+10,_y+24,5)
-	print("pROFIT: ",_x+10,_y+40,5)
+	print("rEVENUE: ",_x+10,_y+40,5)
 	print("$",_x+53,_y+40,5)
 	print(dm,(_x+29)-(#dm*4-40),_y+16,5)
 	print(ds,(_x+29)-(#ds*4-40),_y+24,5)
 	line(_x+7,_y+33,_x+72,_y+33,6)
-	local pro=" "..profit
-	print(pro,(_x+29)-(#pro*4-40),_y+40,profitcol)
+	local rev=" "..revenue
+	print(rev,(_x+29)-(#rev*4-40),_y+40,revcol)
 	print("cOMMENTS:",_x+7,_y+55,5)
 	print(rcom.."\n\n"..pcom,_x+10,_y+63,5)
 	print("❎ to start next day",30,118,0)
