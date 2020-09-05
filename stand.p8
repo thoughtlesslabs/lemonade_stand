@@ -114,6 +114,7 @@ function drawstart()
 	map(0,0,0,48)
 	rectfill(0,100,128,103,3)
 	spr(112,45,78,3,4)
+	print("CLOSED",45,97,6)
 
 	drawpeople()
 end
@@ -411,20 +412,22 @@ function drawday()
 	palt()
 	spr(112,45,77,3,4)
 	print("OPEN",49,97,6)
-	
-	-- show drinks on screen
-	for i=1,drinks do
-		spr(10,5+flr((i-1)/8)*9,((i-1)%8)*8)
-	end
+
+
  drawpeople()
 	drawsale()
 	print("🅾️ to end day",40,118,7)
 	drawjuice()
+		-- show drinks on screen
+	for i=1,drinks do
+		spr(10,5+flr((i-1)/8)*9,((i-1)%8)*8)
+	end
 	if	lighttimer==0 or lighttimer==flr(rnd(20)) then
 		if chooseweather==8 then
 			cls(7)
 		end
 	end
+	
 end
 
 function updatebalance()
@@ -526,6 +529,7 @@ function weather()
 	-- show forecast sprite
 	local randppl=flr(rnd(5))
 	chooseweather=flr(rnd(9)/2)*2
+	chooseweather=8
 	wspr=chooseweather
 	if chooseweather==0 then
 		customers=30+randppl
@@ -951,7 +955,7 @@ function spawnbgparts(_top,_t,numparts)
 						addjuice(117,_x+i*16-4,_y-4,0,0.5,0,1)
 					elseif mode=="day" then
 						if chooseweather==4 then
-							addjuice(120,_x+rnd(20),_y+flr(rnd(8))*i,-0.4+rnd(0.25),0,1000,2)
+							addjuice(120,_x+rnd(20),_y+flr(rnd(25))*i,-0.4+rnd(0.25),0,1000,2)
 						elseif chooseweather==6 then
 							addjuice(12,rnd(140),_y,0,1.5+rnd(),180,0)
 						elseif chooseweather==8 then
