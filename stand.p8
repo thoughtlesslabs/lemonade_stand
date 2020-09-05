@@ -44,8 +44,9 @@ function _init()
 	parttimer=0
 	partrow=0
 	startpeople=true
-	startparts()
+	startparts(8)
 	lighttimer=30
+	_numparts=0
 end
 
 function _update60()
@@ -86,7 +87,7 @@ end
 function updatestart()
 	-- raining particles
 	parttimer=parttimer+1
-	spawnbgparts(true,parttimer)
+	spawnbgparts(true,parttimer,8)
 	for i=#people,1,-1 do
 		if people[i].x >140 or people[i].x<-10 then
 			del(people,people[i])
@@ -312,7 +313,7 @@ function updateconfirm()
 		makedrinks()
 		sellalgo()
 		moneystart=money
-		startparts()
+		startparts(30)
 		parttimer=0
 	end
 	if btnp(4) then
@@ -344,7 +345,7 @@ function updateday()
 		lighttimer=flr(180+rnd(50))
 	end
 	parttimer=parttimer+1
-	spawnbgparts(true,parttimer)
+	spawnbgparts(true,parttimer,30)
 --	addweather(chooseweather)
 	
 	-- sell drinks for cash
@@ -919,20 +920,20 @@ function drawsale()
 end
 
 -- lemons on start
-function startparts()
+function startparts(number)
 	for i=0,400 do
-		spawnbgparts(false,i)
+		spawnbgparts(false,i,number)
 	end
 end
 
-function spawnbgparts(_top,_t)
+function spawnbgparts(_top,_t,numparts)
 		if _t%30==0 then
 			if partrow==0 then
 				partrow=1
 			else
 				partrow=0
 			end
-			for i=0,8 do
+			for i=0,numparts do
 			if mode=="start" then
 				if _top then
 					_y=-8
@@ -941,13 +942,22 @@ function spawnbgparts(_top,_t)
 					_y=-8 + 0.4*_t
 					_x=0
 				end
-			else
-					if _top then
+			else if chooseweather==4 then
+				if _top then
 					_y=-10
 					_x=130  
 				else
 					_y=-10
 					_x=-40+0.4*_t
+				end
+			elseif chooseweather==6 then
+					if _top then
+						_y=-8
+						_x=0
+					else
+						_y=-50 + 0.4*_t
+						_x=0
+					end
 				end
 			end			
 				if (i+partrow)%2==0 then
@@ -957,12 +967,13 @@ function spawnbgparts(_top,_t)
 						if chooseweather==4 then
 							addjuice(120,_x+rnd(20),_y+flr(rnd(8))*i,-0.4+rnd(0.25),0,1000,2)
 						elseif chooseweather==6 then
-							addjuice(6,-70+rnd(190),-20,1,1.5+rnd(),150,0)
+							addjuice(6,rnd(140),_y,0,1.5+rnd(),100,0)
 						end
 					end
+				end
 			end
 		end
-	end
+	
 end
 __gfx__
 cccccccccccccccccccccccccccccccccccccccccccccccc11111111111111111111111111111111000000003333333003333333333333333333333333000003
