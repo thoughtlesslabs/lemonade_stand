@@ -528,7 +528,7 @@ function weather()
 	-- show forecast sprite
 	local randppl=flr(rnd(5))
 	chooseweather=flr(rnd(9)/2)*2
-	chooseweather=4
+	chooseweather=6
 --	wspr=chooseweather
 		
 	if chooseweather==0 then
@@ -954,7 +954,11 @@ function spawnbgparts(_top,_t)
 					if mode=="start" then
 						addjuice(117,_x+i*16-4,_y-4,0,0.5,0,1)
 					elseif mode=="day" then
-						addjuice(120,_x+rnd(20),_y+flr(rnd(8))*i,-0.5+rnd(0.25),0,1000,2)
+						if chooseweather==4 then
+							addjuice(120,_x+rnd(20),_y+flr(rnd(8))*i,-0.4+rnd(0.25),0,1000,2)
+						elseif chooseweather==6 then
+							addjuice(6,-70+rnd(190),-20,1,1.5+rnd(),150,0)
+						end
 					end
 			end
 		end
