@@ -336,7 +336,9 @@ function updateday()
 	-- check if cup avail 
 	-- if cups avail then sell
 	-- day ends when customers=0
+	if chooseweather==8 then
 	lighttimer-=1
+	end
 	if lighttimer<-1 then
 		lighttimer=flr(180+rnd(50))
 	end
@@ -520,8 +522,8 @@ function weather()
 	-- show forecast sprite
 	local randppl=flr(rnd(5))
 	chooseweather=flr(rnd(9)/2)*2
-	chooseweather=8
---	wspr=chooseweather
+--	chooseweather=8
+	wspr=chooseweather
 		
 	if chooseweather==0 then
 		customers=30+randppl
@@ -536,7 +538,7 @@ function weather()
 	elseif chooseweather==4 then
 		customers=20+randppl
 		weathername="cloudy"
-		weatherbg=13
+		weatherbg=12
 		weathervar=3
 	elseif chooseweather==6 then
 		customers=10+randppl
