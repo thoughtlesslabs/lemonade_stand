@@ -13,7 +13,7 @@ function _init()
 	mode="start"
 	selector=1
 	recipeselector=1
-	activemenu=2
+	activemenu=0
 	money=100
 	levelstart=false
 	sx=62
@@ -99,8 +99,8 @@ function updatestart()
 	if btnp(5) then
 		mode="game"
 		levelstart=true
-		switchmenu()
 		resetgame()
+		showstory=true
 	end
 end
 
@@ -123,6 +123,17 @@ function updategame()
 	if levelstart then
 		weather()
 		levelstart=false
+	end
+	if showstory then
+		if btnp(5) then
+			showstory=false
+			switchmenu()
+		end
+	else
+		-- change menu
+		if btnp(4) then
+			switchmenu()
+		end
 	end
 	if activemenu==1 then
 		if btnp(0) or btnp(1) then
@@ -195,14 +206,14 @@ function updategame()
 			mode="confirm"
 		end
 	end
-	-- change menu
-	if btnp(4) then
-		switchmenu()
-	end
 end
 
 function drawgame()
 	cls(10)
+	if showstory then
+		rectfill(20,10,90,100,7)
+		print("son,\n\nfor your 8th birthday, your\nmother and i decided it's time\nfor you to start building your empire.",20,30,5)
+	else
 	-- menu selection indicator
 	rectfill(menux,menuy,menudx,menudy,2)
 	
@@ -304,6 +315,7 @@ function drawgame()
 	local wn
 	wn=weathername
 	print(wn,62+((wx/2)-(#wn*2)),wy+35,5)
+	end
 end
 
 function updateconfirm()
@@ -515,7 +527,7 @@ function switchmenu()
 		menuy=ry-2
 		menudx=rx+76
 		menudy=ry+47
-	elseif activemenu==2 then
+	elseif activemenu==2 or activemenu==0 then
 		activemenu=1
 		-- move active menu box
 		menux=sx-2
