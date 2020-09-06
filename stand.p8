@@ -215,11 +215,11 @@ function drawgame()
 	if showstory then
 		rectfill(20,10,90,110,7)
 		if gamecounter==0 then
-			print("aaron,\n\nfor your 9th\nbirthday, your\nuncle decided\nit's time for\nyou to start\nbuilding your\nlemonade empire.\n\nhere's $100!\n\ngood luck",25,15,5)
+			print("aaron,\n\nfor your 9th\nbirthday, your\nuncle decided\nit's time for\nyou to start\nbuilding your\nlemonade empire.\n\nhere's $100!\n\ngood luck!",25,15,5)
 		elseif gamecounter==1 then
-			print("back again?\n\nwell, here's\nanother $100.\nplease try no\nto spend it\nall right\naway.\n\ngood luck",25,15,5)
+			print("back again?\n\nwell, here's\nanother $100.\nplease try not\nto spend it\nall right\naway.\n\ngood luck!",25,15,5)
 		elseif gamecounter>=2 then
-			print("aaron,\n\nfor your 9th\nbirthday, your\nuncle decided\nit's time for\nyou to start\nbuilding your\nlemonade empire.\n\nhere's $100!\n\ngood luck",25,15,5)
+			print("seriously?\n\nalright then.\nhere you go\n\n\ngood luck!",25,15,5)
 		end		
 		print("❎ to start",25,100,5)
 	else
