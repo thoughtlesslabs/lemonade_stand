@@ -38,8 +38,8 @@ function _init()
 	option="buy"
 	revenue=0
 	daynum=0
-	rcom="test"
-	pcom="test2"
+	rcom=" "
+	pcom=" "
 		--particle patterns
 	parttimer=0
 	partrow=0
