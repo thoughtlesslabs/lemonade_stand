@@ -14,7 +14,7 @@ function _init()
 	selector=1
 	recipeselector=1
 	activemenu=0
-	money=100
+	money=490
 	levelstart=false
 	sx=62
 	sy=5
@@ -102,6 +102,8 @@ function updatestart()
 		levelstart=true
 		resetgame()
 		showstory=true
+		victory=false
+		loss=false
 	end
 end
 
@@ -213,13 +215,15 @@ end
 function drawgame()
 	cls(10)
 	if showstory then
-		rectfill(20,10,90,110,7)
+		rectfill(20,10,108,110,7)
 		if gamecounter==0 then
-			print("aaron,\n\nfor your 9th\nbirthday, your\nuncle decided\nit's time for\nyou to start\nbuilding your\nlemonade empire.\n\nhere's $100!\n\ngood luck!",25,15,5)
-		elseif gamecounter==1 then
-			print("back again?\n\nwell, here's\nanother $100.\nplease try not\nto spend it\nall right\naway.\n\ngood luck!",25,15,5)
-		elseif gamecounter>=2 then
-			print("seriously?\n\nalright then.\nhere you go\n\n\ngood luck!",25,15,5)
+			print("caleb,\n\nfor your 9th\nbirthday, your mom\nand i decided it's\ntime for you to\nstart building your\nlemonade empire.\n\nhere's $100 to get\nyou going.\n\ngood luck!",25,15,5)
+		elseif gamecounter>=1 then
+			if victory then
+				print("you did great!\n\nnow that you've put\nthat money away we\nthought you could\ntry again.\n\nhere's another $100.\n\ngood luck!",25,25,5)
+			elseif loss then 
+				print("back again?\n\nwell, i guess we\ncan help you again.\nhere's another $100.\nplease try not to\nspend it all right\naway.\n\ngood luck!",25,25,5)
+			end
 		end		
 		print("❎ to start",25,100,5)
 	else
@@ -390,6 +394,7 @@ function updateday()
 	end		
 	if #people==0 then
 		if money<=0 or money>=500 then
+			resetgame()
 			mode="gameover"
 		else
 			daynum+=1
@@ -415,6 +420,7 @@ function updateday()
 			end
 		end
 		if money<=0 or money>=500 then
+			resetgame()
 			mode="gameover"
 		else
 			daynum+=1
@@ -450,14 +456,13 @@ function drawday()
 	drawjuice()
 		-- show drinks on screen
 	for i=1,drinks do
-		spr(10,5+flr((i-1)/8)*9,((i-1)%8)*8)
+		spr(10,5+flr((i-1)/8)*9,5+((i-1)%8)*8)
 	end
 	if	lighttimer==0 or lighttimer==flr(rnd(20)) then
 		if chooseweather==8 then
 			cls(7)
 		end
 	end
-	
 end
 
 function updatebalance()
@@ -504,6 +509,11 @@ function updategameover()
 		loss=true
 	end
 	
+	if victory then
+		parttimer=parttimer+1
+		spawnbgparts(true,parttimer,8)
+	end
+	
 	if btnp(5) then
 		mode="game"
 		gamecounter+=1
@@ -511,17 +521,17 @@ function updategameover()
 		resetgame()
 		showstory=true
 	end
-
 end
 
 function drawgameover()
+	cls()
 	if victory then
-		cls()
 		text="❎ to go again"
+
 	elseif loss then
-		cls(7)
 		text="❎ to try again"
 	end
+	drawjuice()
 	print(text,20,50,8)
 end
 
@@ -641,6 +651,7 @@ end
 function resetgame()
 	sale={}
 	people={}
+	parts={}
 	drinksold=0
 	drinks=0
 	if victory or loss then
@@ -648,8 +659,6 @@ function resetgame()
 		for i=1,#inventory do
 			inventory[i].owned=0
 		end
-		victory=false
-		loss=false
 	end
 end
 
@@ -884,19 +893,11 @@ function addjuice(_sprite,_x,_y,_dx,_dy,_maxage,_type)
 	add(parts,j)
 end
 
--- generate juice
-function squeeze(_x,_y)
-	
-end
-
 -- move juice particles
 function updatejuice()
 	for i=#parts,1,-1 do
 		local _juice=parts[i]
 		_juice.age+=1
-		if _juice.tpe==1 and mode!="start" then
-				del(parts,_juice)
-		end
 		if _juice.age>_juice.maxage and mode!="start" then
 			del(parts,_juice)
 		else
@@ -980,7 +981,7 @@ function spawnbgparts(_top,_t,numparts)
 				partrow=0
 			end
 			for i=0,numparts do
-			if mode=="start" then
+			if mode=="start" or mode=="gameover" then
 				if _top then
 					_y=-8
 					_x=-14
@@ -1005,8 +1006,8 @@ function spawnbgparts(_top,_t,numparts)
 				end
 			end			
 				if (i+partrow)%2==0 then
-					if mode=="start" then
-						addjuice(117,_x+i*16-4,_y-4,0,0.5,0,1)
+					if mode=="start" or mode=="gameover" then
+						addjuice(117,_x+i*16-4,_y-4,0,0.5,300,1)
 					elseif mode=="day" then
 						if chooseweather==4 then
 							addjuice(120,_x+rnd(20),_y+flr(rnd(25))*i,-0.4+rnd(0.25),0,1000,2)
@@ -1019,7 +1020,6 @@ function spawnbgparts(_top,_t,numparts)
 				end
 			end
 		end
-	
 end
 __gfx__
 cccccccccccccccccccccccccccccccccccccccccccccccc11111111111111111111111111111111000000003333333003333333333333333333333330000033
