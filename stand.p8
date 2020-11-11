@@ -224,7 +224,7 @@ function drawgame()
 			if victory then
 				print("you did great!\n\nnow that you've put\nthat money away we\nthought you could\ntry again.\n\nhere's another $100.\n\ngood luck!",25,25,5)
 			elseif loss then 
-				print("back again?\n\nwell, i guess we\ncan help you again.\nhere's another $100.\nplease try not to\nspend it all right\naway.\n\ngood luck!",25,25,5)
+				print("back again?\n\nwell, i guess we\ncan help you.\nhere's another $100.\nplease try not to\nspend it all right\naway.\n\ngood luck!",25,25,5)
 			end
 		end		
 		print("❎ to start",25,100,5)
