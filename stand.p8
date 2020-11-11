@@ -527,11 +527,13 @@ function updategameover()
 end
 
 function drawgameover()
-	cls()
+	
 	if victory then
+		cls(12)
 		text="❎ to go again"
 
 	elseif loss then
+		cls()
 		text="❎ to try again"
 	end
 	drawjuice()
