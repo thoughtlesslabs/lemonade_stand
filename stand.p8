@@ -167,7 +167,7 @@ function updategame()
 	elseif activemenu==2 then
 		local make=inventory[recipeselector]
 		if btnp(0) then
-			sfx(61)
+			sfx(57)
 			if recipeselector==3 then
 				if drinkprice>0 then
 					drinkprice-=2
@@ -212,7 +212,6 @@ function updategame()
 		-- start day
 		if btnp(5) then
 			mode="confirm"
-			startmusic(4)
 		end
 	end
 	end
@@ -340,6 +339,11 @@ end
 function updateconfirm()
 	if btnp(5) then
 		sfx(55)
+		if weathervar == 1 or weathervar == 2 then
+			stopmusic()
+			startmusic(18)
+		end
+		startmusic(_weatherp)
 		mode="day"
 		spawnperson(customers)
 		startday=true
@@ -474,6 +478,7 @@ function drawday()
 end
 
 function updatebalance()
+	stopmusic()
 	balanceactive=true
 	revenue=money-moneystart
 	if revenue>0 then
@@ -486,6 +491,7 @@ function updatebalance()
 		mode="game"
 		levelstart=true
 		switchmenu()
+		startmusic(4)
 	end
 end
 
