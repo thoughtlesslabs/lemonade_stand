@@ -86,6 +86,7 @@ function _draw()
 end
 
 function updatestart()
+	startmusic(0)
 	-- raining particles
 	parttimer=parttimer+1
 	spawnbgparts(true,parttimer,8)
@@ -128,6 +129,8 @@ function updategame()
 	end
 	if showstory then
 		if btnp(5) then
+			stopmusic()
+			startmusic(4)
 			showstory=false
 			switchmenu()
 		end
@@ -180,7 +183,7 @@ function updategame()
 		end
 	end
 		if btnp(1) then
-			sfx(61)
+			sfx(58)
 			if recipeselector==3 then
 				if drinkprice<9 then
 					drinkprice+=2
@@ -209,6 +212,7 @@ function updategame()
 		-- start day
 		if btnp(5) then
 			mode="confirm"
+			startmusic(4)
 		end
 	end
 	end
@@ -335,7 +339,7 @@ end
 
 function updateconfirm()
 	if btnp(5) then
-		sfx(62)
+		sfx(55)
 		mode="day"
 		spawnperson(customers)
 		startday=true
@@ -347,6 +351,7 @@ function updateconfirm()
 	end
 	if btnp(4) then
 		mode="game"
+		sfx(53)
 	end
 end
 
@@ -389,7 +394,7 @@ function updateday()
 						spawnsale(_ppls.x,_ppls.y)
 						drinksold+=1
 						money+=drinkprice
-						sfx(59)
+						sfx(56)
 					end
 				end
 			end
@@ -542,7 +547,7 @@ end
 function purchase(item)	
 	choice=inventory[item]
 	if option=="buy" then
-		sfx(61)
+		sfx(58)
 		if money>=choice.cost then
 			money-=choice.cost
 			if item==1 then
@@ -555,7 +560,7 @@ function purchase(item)
 		end
 	elseif option=="sell" then
 		if choice.owned>0 then
-			sfx(63)
+			sfx(57)
 			money+=choice.cost
 			if item==1 then
 				choice.owned-=10
@@ -792,6 +797,16 @@ function helpfulhint()
 	else
 		pcom="- I LOVE FREEBIES"
 	end
+end
+
+function startmusic(n)
+	if (not music_playing) then
+		music(n) music_playing=true
+	end
+end
+
+function stopmusic()
+	music(-1) music_playing=false
 end
 -->8
 -- people generator
