@@ -411,6 +411,10 @@ function updateday()
 		else
 			daynum+=1
 			mode="balance"
+			if track!=4 then
+				stopmusic()
+				startmusic(4)
+			end
 		end
 	end
 	
@@ -437,6 +441,10 @@ function updateday()
 		else
 			daynum+=1
 			mode="balance"
+			if track!=4 then
+				stopmusic()
+				startmusic(4)
+			end
 		end
 	end
 	helpfulhint()
@@ -478,7 +486,6 @@ function drawday()
 end
 
 function updatebalance()
-	stopmusic()
 	balanceactive=true
 	revenue=money-moneystart
 	if revenue>0 then
@@ -491,7 +498,7 @@ function updatebalance()
 		mode="game"
 		levelstart=true
 		switchmenu()
-		startmusic(4)
+
 	end
 end
 
@@ -808,6 +815,7 @@ end
 function startmusic(n)
 	if (not music_playing) then
 		music(n) music_playing=true
+		track=n
 	end
 end
 
