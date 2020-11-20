@@ -48,6 +48,7 @@ function _init()
 	lighttimer=30
 	_numparts=0
 	gamecounter=0
+	startmusic(o)
 end
 
 function _update60()
@@ -86,7 +87,6 @@ function _draw()
 end
 
 function updatestart()
-	startmusic(0)
 	-- raining particles
 	parttimer=parttimer+1
 	spawnbgparts(true,parttimer,8)
@@ -547,13 +547,16 @@ end
 function drawgameover()
 	cls()
 	if victory then
-		text="❎ to go again"
+		text="congratulations!/n/nyou are the king of lemonade/n/ndon't forget to pay/n/nback your parents",x,y,0)
 
 	elseif loss then
-		text="❎ to try again"
+		text="you're out of money!"
 	end
 	drawjuice()
+	local x=20, y=50
+	
 	print(text,20,50,8)
+	print("❎ to play again",x, y+10,8)
 end
 
 -- purchase based on item
