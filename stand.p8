@@ -547,16 +547,17 @@ end
 function drawgameover()
 	cls()
 	if victory then
-		text="congratulations!/n/nyou are the king of lemonade/n/ndon't forget to pay/n/nback your parents",x,y,0)
-
+		text="congratulations!\n\nyou are the king of\nlemonade.\n\ndon't forget to pay\nback your parents."
+  
 	elseif loss then
 		text="you're out of money!"
 	end
 	drawjuice()
-	local x=20, y=50
+	rectfill(20,20,108,100,7)
+	local x=25 y=30
 	
-	print(text,20,50,8)
-	print("❎ to play again",x, y+10,8)
+	print(text,x,y,5)
+	print("❎ to play again",x, y+48,8)
 end
 
 -- purchase based on item
