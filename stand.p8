@@ -576,7 +576,7 @@ function purchase(item)
 			end
 		end
 	elseif option=="sell" then
-		if choice.owned>0 then
+		if choice.owned>0 and choice.owned-choice.q>=0  then
 			sfx(57)
 			money+=choice.cost
 			if item==1 then
@@ -663,16 +663,19 @@ function initinventory()
 		,owned=0
 		,cost=6
 		,recipe=0
+		,q=10
 		},
 		{name="sugar"
 		,owned=0
 		,cost=2
 		,recipe=0
+		,q=5
 		},
 		{name="cups"
 		,owned=0
 		,cost=3
 		,recipe=0
+		,q=1
 		}
 	}	
 end
@@ -917,6 +920,9 @@ end
 -- future
 -- add in levels
 -- stand upgrades
+-- add check to ensure selling
+-- doesn't make it less than 0
+-- if it does, then set to 0
 -->8
 -- lemon juice
 
