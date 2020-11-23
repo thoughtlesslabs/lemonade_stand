@@ -14,7 +14,7 @@ function _init()
 	selector=1
 	recipeselector=1
 	activemenu=0
-	money=100
+	money=600
 	levelstart=false
 	sx=62
 	sy=5
@@ -405,17 +405,7 @@ function updateday()
 		end
 	end		
 	if #people==0 then
-		if money<=0 or money>=500 then
-			resetgame()
-			mode="gameover"
-		else
-			daynum+=1
-			mode="balance"
-			if track!=4 then
-				stopmusic()
-				startmusic(4)
-			end
-		end
+		endgame()
 	end
 	
 	if btnp(4) then
@@ -435,19 +425,28 @@ function updateday()
 				end
 			end
 		end
-		if money<=0 or money>=500 then
-			resetgame()
-			mode="gameover"
-		else
-			daynum+=1
-			mode="balance"
-			if track!=4 then
-				stopmusic()
-				startmusic(4)
-			end
-		end
+		endgame()
 	end
 	helpfulhint()
+end
+
+function endgame()
+ mode="gameover"
+ if money>=500 then
+		victory=true
+		bgcolor=12
+		startparts(7)
+	elseif money<=0 then
+		loss=true
+		bgcolor=0
+	else
+		daynum+=1
+		mode="balance"
+		if track!=4 then
+			stopmusic()
+			startmusic(4)
+		end
+	end
 end
 
 function drawday()
@@ -498,7 +497,6 @@ function updatebalance()
 		mode="game"
 		levelstart=true
 		switchmenu()
-
 	end
 end
 
@@ -524,11 +522,6 @@ function drawbalance()
 end
 
 function updategameover()
-	if money>=500 then
-		victory=true
-	elseif money<=0 then
-		loss=true
-	end
 	
 	if victory then
 		parttimer=parttimer+1
@@ -545,10 +538,9 @@ function updategameover()
 end
 
 function drawgameover()
-	cls()
+	cls(bgcolor)
 	if victory then
 		text="congratulations!\n\nyou are the king of\nlemonade.\n\ndon't forget to pay\nback your parents."
-  
 	elseif loss then
 		text="you're out of money!"
 	end
