@@ -103,8 +103,6 @@ function updatestart()
 		levelstart=true
 		resetgame()
 		showstory=true
-		victory=false
-		loss=false
 	end
 end
 
@@ -133,6 +131,8 @@ function updategame()
 			startmusic(4)
 			showstory=false
 			switchmenu()
+			victory=false
+			loss=false
 		end
 	else
 		-- change menu
@@ -431,21 +431,24 @@ function updateday()
 end
 
 function endgame()
- mode="gameover"
- if money>=500 then
-		victory=true
-		bgcolor=12
-		startparts(7)
-	elseif money<=0 then
-		loss=true
-		bgcolor=0
-	else
-		daynum+=1
-		mode="balance"
-		if track!=4 then
-			stopmusic()
-			startmusic(4)
+ if money<500 and money >0 then
+  daynum+=1
+	 mode="balance"
+	 if track!=4 then
+		 stopmusic()
+		 startmusic(4)
 		end
+	else
+		resetgame()
+		mode="gameover"
+		if money>=500 then
+		 victory=true
+		 bgcolor=12
+		 startparts(7)
+		elseif money<=0 then
+		 loss=true
+		 bgcolor=0
+  end
 	end
 end
 
@@ -522,7 +525,6 @@ function drawbalance()
 end
 
 function updategameover()
-	
 	if victory then
 		parttimer=parttimer+1
 		spawnbgparts(true,parttimer,8)
@@ -542,12 +544,11 @@ function drawgameover()
 	if victory then
 		text="congratulations!\n\nyou are the king of\nlemonade.\n\ndon't forget to pay\nback your parents."
 	elseif loss then
-		text="you're out of money!"
+		text="you're out of money!\n\ni guess the lemonade\nbusiness just isn't\nfor you."
 	end
 	drawjuice()
 	rectfill(20,20,108,100,7)
 	local x=25 y=30
-	
 	print(text,x,y,5)
 	print("❎ to play again",x, y+48,8)
 end
