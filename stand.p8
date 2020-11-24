@@ -14,7 +14,7 @@ function _init()
 	selector=1
 	recipeselector=1
 	activemenu=0
-	money=600
+	money=100
 	levelstart=false
 	sx=62
 	sy=5
