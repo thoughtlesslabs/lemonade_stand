@@ -48,7 +48,7 @@ function _init()
 	lighttimer=30
 	_numparts=0
 	gamecounter=0
-	startmusic(o)
+	startmusic(0)
 end
 
 function _update60()
@@ -143,6 +143,7 @@ function updategame()
 
 	if activemenu==1 then
 		if btnp(0) or btnp(1) then
+			sfx(52)
 			if option=="buy" then
 				option="sell"
 			elseif option=="sell" then	
@@ -150,12 +151,14 @@ function updategame()
 			end
 		end
 		if btnp(2) then
+			sfx(52)
 			if selector>1 then
 				selector-=1
 				sely-=8
 			end
 		end
 		if btnp(3) then
+			sfx(52)
 			if selector<#inventory then
 				selector+=1
 				sely+=8
@@ -199,11 +202,13 @@ function updategame()
 			end		
 		end
 		if btnp(2) then
+			sfx(52)
 			if recipeselector>1 then
 				recipeselector-=1
 			end
 		end
 		if btnp(3) then
+			sfx(52)
 			if recipeselector<#inventory then
 				recipeselector+=1
 			end			
@@ -378,8 +383,9 @@ function updateday()
 	-- if cups avail then sell
 	-- day ends when customers=0
 	lighttimer-=1
-	if lighttimer<-1 then
+	if lighttimer<-1 and chooseweather==8 then
 		lighttimer=flr(180+rnd(50))
+		sfx(49+rnd(2))
 	end
 	parttimer=parttimer+1
 	spawnbgparts(true,parttimer,spawnwetnum)
@@ -445,9 +451,13 @@ function endgame()
 		 victory=true
 		 bgcolor=12
 		 startparts(7)
+		 stopmusic()
+		 startmusic(19)
 		elseif money<=0 then
 		 loss=true
 		 bgcolor=0
+		 stopmusic()
+		 startmusic(21)
   end
 	end
 end
@@ -536,6 +546,10 @@ function updategameover()
 		levelstart=true
 		resetgame()
 		showstory=true
+		if track!=19 then
+		stopmusic()
+		startmusic(0)
+		end
 	end
 end
 
@@ -567,6 +581,8 @@ function purchase(item)
 			else
 				choice.owned+=1
 			end
+		else
+		 sfx(62)
 		end
 	elseif option=="sell" then
 		if choice.owned>0 and choice.owned-choice.q>=0  then
@@ -608,7 +624,7 @@ end
 function weather()
 	-- show forecast sprite
 	local randppl=flr(rnd(5))
-	chooseweather=flr(rnd(9)/2)*2
+ chooseweather=flr(rnd(9)/2)*2	
 	wspr=chooseweather
 	if chooseweather==0 then
 		customers=30+randppl
