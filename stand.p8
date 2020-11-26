@@ -49,6 +49,9 @@ function _init()
 	_numparts=0
 	gamecounter=0
 	startmusic(0)
+ credits_y=118
+ credits_x1=148
+ credits_x2=308
 end
 
 function _update60()
@@ -104,6 +107,7 @@ function updatestart()
 		resetgame()
 		showstory=true
 	end
+	creditscroll()
 end
 
 function drawstart()
@@ -116,7 +120,8 @@ function drawstart()
 	rectfill(0,100,128,103,3)
 	spr(112,45,76,3,4)
 	print("CLOSED",45,97,6)
-
+ print("a thoughtless labs experiment",credits_x1,credits_y,6)
+ print("music by @gruber_music",credits_x2,credits_y,6)
 	drawpeople()
 end
 
@@ -838,6 +843,19 @@ end
 function stopmusic()
 	music(-1) music_playing=false
 end
+
+function creditscroll()
+ if credits_x1>-110 then
+  credits_x1-=0.5
+ else
+ 	credits_x1=158
+ end
+ if credits_x2>-110 then
+ 	credits_x2-=0.5
+ else
+  credits_x2=credits_x1+150
+ end
+end
 -->8
 -- people generator
 
@@ -919,31 +937,7 @@ function drawpeople()
 	end
 end
 -->8
--- to do list
-
--- intro story
--- save functionality
--- more people versions
--- phase transitions
-
--- future
--- add in levels
--- stand upgrades
--- add check to ensure selling
--- doesn't make it less than 0
--- if it does, then set to 0
--->8
 -- lemon juice
-
--- fader
-function fade()
-	fadecol={0,1,1,2,3,4,5,6,7,8}
-	for i=1,15 do
-		col=fadecol[i]
-		pal(col)
-	end
-
-end
 
 -- particle adder
 function addjuice(_sprite,_x,_y,_dx,_dy,_maxage,_type)
